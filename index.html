@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STARSTIL — Komple Stil Rehberin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdf5f7;
+  --white: #ffffff;
+  --text: #1a0a10;
+  --muted: #8a5060;
+  --border: #f0c0cc;
+  --rose: #d4496a;
+  --rose-pale: #fde8ee;
+  --blush: #fce8f0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+header {
+  background: linear-gradient(135deg, #1a0510 0%, #2d0a1a 100%);
+  padding: 1rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:700; color:#fff; letter-spacing:2px; }
+.logo em { color:#f0a0b8; font-style:italic; }
+.lang-toggle { display:flex; gap:0.3rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:999px; padding:0.25rem 0.6rem; }
+.lang-btn { font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.5); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; padding:0.1rem 0.3rem; border-radius:999px; transition:all 0.2s; }
+.lang-btn.active { color:#fff; background:rgba(255,255,255,0.15); }
+
+.hero {
+  background: linear-gradient(160deg, #1a0510 0%, #3d1020 50%, #6b1a35 100%);
+  padding: 2.5rem 1.5rem 3rem; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 50% 0%, rgba(240,160,184,0.15), transparent 60%); }
+.hero-eyebrow { font-size:0.68rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(240,160,184,0.8); margin-bottom:0.75rem; position:relative; }
+.hero-title { font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:700; color:#fff; line-height:1.1; margin-bottom:0.6rem; position:relative; }
+.hero-title em { font-style:italic; color:#f0a0b8; }
+.hero-sub { color:rgba(255,255,255,0.6); font-size:0.88rem; font-weight:300; max-width:300px; margin:0 auto; line-height:1.7; position:relative; }
+
+/* ADIMLAR */
+.steps { padding: 1.5rem 1.2rem; max-width:600px; margin:0 auto; }
+.step-wrap { margin-bottom:2rem; }
+.step-label { font-size:0.65rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--rose); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem; }
+.step-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.step-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; margin-bottom:1.2rem; color:var(--text); }
+
+/* ORTAM SEÇİMİ */
+.ortam-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:0; }
+.ortam-btn {
+  background:var(--white); border:2px solid var(--border); border-radius:14px;
+  padding:1rem; cursor:pointer; text-align:center; transition:all 0.2s;
+  font-family:'DM Sans',sans-serif;
+}
+.ortam-btn:hover { border-color:var(--rose); background:var(--rose-pale); transform:translateY(-2px); }
+.ortam-btn.selected { border-color:var(--rose); background:var(--rose-pale); transform:translateY(-2px); box-shadow:0 4px 16px rgba(212,73,106,0.15); }
+.ortam-icon { font-size:2rem; display:block; margin-bottom:0.4rem; }
+.ortam-ad { font-size:0.85rem; font-weight:700; color:var(--text); }
+.ortam-desc { font-size:0.7rem; color:var(--muted); margin-top:0.15rem; }
+
+/* KİYAFET TİPİ */
+.kiyafet-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; }
+.kiyafet-btn {
+  background:var(--white); border:2px solid var(--border); border-radius:12px;
+  padding:0.8rem 0.4rem; cursor:pointer; text-align:center; transition:all 0.2s;
+  font-family:'DM Sans',sans-serif;
+}
+.kiyafet-btn:hover { border-color:var(--rose); background:var(--rose-pale); }
+.kiyafet-btn.selected { border-color:var(--rose); background:var(--rose-pale); box-shadow:0 4px 12px rgba(212,73,106,0.15); }
+.kiyafet-icon { font-size:1.6rem; display:block; margin-bottom:0.3rem; }
+.kiyafet-ad { font-size:0.72rem; font-weight:700; color:var(--text); }
+
+/* RENK SEÇİMİ */
+.renk-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; }
+.renk-kart {
+  cursor:pointer; border-radius:14px; overflow:hidden;
+  border:2.5px solid transparent; transition:all 0.3s cubic-bezier(.22,1,.36,1);
+  background:var(--white); box-shadow:0 2px 10px rgba(0,0,0,0.07);
+  position:relative;
+}
+.renk-kart:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+.renk-kart.selected { border-color:var(--text); transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.18); }
+.renk-kart.selected::after {
+  content:'✓'; position:absolute; top:0.4rem; right:0.4rem;
+  width:20px; height:20px; background:var(--text); color:#fff;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; font-weight:900; z-index:2;
+  animation:popIn 0.2s cubic-bezier(.22,1,.36,1);
+}
+@keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+.renk-visual { height:130px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#fff 0%,#fdf5f7 100%); padding:10px; }
+.dress-svg { width:70px; height:105px; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.15)); transition:transform 0.3s; }
+.renk-kart:hover .dress-svg { transform:scale(1.05); }
+.renk-ad { padding:0.4rem 0.5rem 0.6rem; text-align:center; font-size:0.74rem; font-weight:700; color:var(--text); border-top:1px solid var(--border); }
+
+/* TEN */
+.ten-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; }
+.ten-btn {
+  padding:0.85rem 1rem; border-radius:14px; border:2px solid var(--border);
+  background:var(--white); cursor:pointer; text-align:left; transition:all 0.2s;
+  font-family:'DM Sans',sans-serif; display:flex; align-items:center; gap:0.75rem;
+}
+.ten-btn:hover { border-color:var(--rose); background:var(--rose-pale); }
+.ten-btn.selected { border-color:var(--rose); background:var(--rose-pale); }
+.ten-circle { width:34px; height:34px; border-radius:50%; flex-shrink:0; border:2px solid rgba(0,0,0,0.1); }
+.ten-name { font-size:0.82rem; font-weight:600; color:var(--text); }
+.ten-desc { font-size:0.66rem; color:var(--muted); margin-top:0.1rem; }
+
+/* CTA */
+.cta-btn {
+  width:100%; padding:1.1rem;
+  background:linear-gradient(135deg,#1a0510,#3d1020);
+  color:#fff; border:none; border-radius:14px;
+  font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:600; font-style:italic;
+  cursor:pointer; margin-bottom:2rem; transition:all 0.2s;
+  box-shadow:0 4px 20px rgba(26,5,16,0.3);
+}
+.cta-btn:hover { transform:translateY(-1px); box-shadow:0 8px 28px rgba(26,5,16,0.4); }
+.cta-btn:disabled { background:#f0c8d0; color:#b07080; cursor:not-allowed; box-shadow:none; transform:none; }
+
+/* SONUÇ */
+.result-card { display:none; margin-bottom:2rem; animation:slideUp 0.5s cubic-bezier(.22,1,.36,1); }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.result-card.show { display:block; }
+
+.result-header {
+  background:linear-gradient(135deg,#1a0510,#3d1020);
+  border-radius:20px 20px 0 0; padding:1.3rem 1.5rem;
+  display:flex; align-items:center; gap:1rem;
+}
+.result-dress { width:55px; height:75px; flex-shrink:0; }
+.result-ortam-badge {
+  background:rgba(240,160,184,0.2); border:1px solid rgba(240,160,184,0.3);
+  color:#f0a0b8; font-size:0.65rem; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; padding:0.2rem 0.6rem; border-radius:999px; margin-bottom:0.4rem;
+  display:inline-block;
+}
+.result-title { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:700; color:#fff; }
+.result-sub { font-size:0.72rem; color:rgba(240,160,184,0.8); margin-top:0.15rem; }
+
+/* SEKMELER */
+.result-tabs { display:grid; grid-template-columns:repeat(5,1fr); background:var(--white); padding:0.6rem; gap:0.35rem; }
+.rtab {
+  padding:0.6rem 0.2rem; font-size:0.62rem; font-weight:700; color:var(--muted);
+  background:var(--bg); border:1.5px solid var(--border); cursor:pointer;
+  text-align:center; border-radius:10px; transition:all 0.2s; font-family:'DM Sans',sans-serif;
+}
+.rtab .ti { font-size:1.1rem; display:block; margin-bottom:0.2rem; }
+.rtab:hover { border-color:var(--rose); color:var(--rose); }
+.rtab.active { color:#fff; background:var(--rose); border-color:var(--rose); box-shadow:0 3px 10px rgba(212,73,106,0.3); transform:translateY(-1px); }
+
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+.stil-body { background:var(--white); border-radius:0 0 20px 20px; padding:1.3rem; }
+
+/* İÇERİK KARTLARI */
+.adim-kart {
+  background:var(--bg); border-radius:14px; padding:1.1rem;
+  margin-bottom:0.7rem; border-left:3px solid var(--rose);
+  animation:fadeSlide 0.3s ease both;
+}
+@keyframes fadeSlide { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+.adim-hdr { display:flex; align-items:center; gap:0.7rem; margin-bottom:0.55rem; }
+.adim-renk { width:36px; height:36px; border-radius:50%; flex-shrink:0; box-shadow:0 2px 8px rgba(0,0,0,0.15); border:2px solid white; }
+.adim-num { margin-left:auto; width:22px; height:22px; background:var(--rose); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; flex-shrink:0; }
+.adim-baslik { font-weight:700; font-size:0.88rem; }
+.adim-text { font-size:0.81rem; color:#3a2030; line-height:1.75; }
+.adim-ipucu { font-size:0.73rem; color:var(--rose); font-weight:600; margin-top:0.45rem; }
+
+.info-kart { background:var(--bg); border-radius:14px; padding:1.1rem; margin-bottom:0.7rem; }
+.info-label { font-size:0.62rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:0.25rem; }
+.info-ad { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-weight:600; margin-bottom:0.45rem; }
+.info-text { font-size:0.81rem; color:#3a2030; line-height:1.75; }
+.info-alt { font-size:0.72rem; color:var(--muted); font-style:italic; margin-top:0.4rem; }
+.chips { display:flex; gap:0.35rem; flex-wrap:wrap; margin-top:0.6rem; }
+.chip { display:flex; align-items:center; gap:0.3rem; padding:0.22rem 0.55rem; border-radius:999px; background:var(--white); border:1px solid var(--border); font-size:0.68rem; font-weight:600; }
+.chip-dot { width:11px; height:11px; border-radius:50%; border:1px solid rgba(0,0,0,0.1); }
+
+.stilist { background:linear-gradient(135deg,var(--rose-pale),var(--blush)); border-radius:12px; padding:1.1rem; margin-top:0.5rem; border:1px solid var(--border); }
+.stilist-label { font-size:0.62rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--rose); margin-bottom:0.35rem; }
+.stilist-text { font-family:'Cormorant Garamond',serif; font-size:0.98rem; font-style:italic; line-height:1.7; }
+
+/* TREND */
+.trend-wrap { margin-bottom:3rem; }
+.divider { font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); text-align:center; margin:2rem 0 1rem; display:flex; align-items:center; gap:0.75rem; }
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.trend-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+.trend-kart { background:var(--white); border-radius:16px; border:1.5px solid var(--border); overflow:hidden; cursor:pointer; transition:all 0.2s; }
+.trend-kart:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(212,73,106,0.12); border-color:var(--rose); }
+.trend-dress { height:110px; display:flex; align-items:center; justify-content:center; }
+.trend-info { padding:0.75rem; border-top:1px solid var(--border); }
+.trend-name { font-size:0.84rem; font-weight:700; }
+.trend-desc { font-size:0.69rem; color:var(--muted); margin-top:0.12rem; }
+
+footer { text-align:center; padding:2rem; color:var(--muted); font-size:0.72rem; border-top:1px solid var(--border); background:var(--white); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">STAR<em>STİL</em></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('tr',this)">TR</button>
+    <span style="color:rgba(255,255,255,0.2);font-size:0.7rem">|</span>
+    <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Ortam · Renk · Uyum · Komple Stil</div>
+  <h1 class="hero-title">Gideceğin yere göre<br><em>komple stilin</em></h1>
+  <p class="hero-sub">Ortamı seç, kıyafetini belirle — makyajdan takıya her şey hazır.</p>
+</div>
+
+<div class="steps">
+
+  <!-- ADIM 1: ORTAM -->
+  <div class="step-wrap">
+    <div class="step-label">Adım 1 / 4</div>
+    <div class="step-title">Nereye gidiyorsun?</div>
+    <div class="ortam-grid" id="ortamGrid"></div>
+  </div>
+
+  <!-- ADIM 2: KİYAFET -->
+  <div class="step-wrap" id="kiyafetWrap" style="display:none">
+    <div class="step-label">Adım 2 / 4</div>
+    <div class="step-title" id="kiyafetTitle">Ne giyiyorsun?</div>
+    <div class="kiyafet-grid" id="kiyafetGrid"></div>
+  </div>
+
+  <!-- ADIM 3: RENK -->
+  <div class="step-wrap" id="renkWrap" style="display:none">
+    <div class="step-label">Adım 3 / 4</div>
+    <div class="step-title">Kıyafetin rengi ne?</div>
+    <div class="renk-grid" id="renkGrid"></div>
+  </div>
+
+  <!-- ADIM 4: TEN -->
+  <div class="step-wrap" id="tenWrap" style="display:none">
+    <div class="step-label">Adım 4 / 4</div>
+    <div class="step-title">Ten rengin hangisine yakın?</div>
+    <div class="ten-grid">
+      <button class="ten-btn" onclick="secTen('açık',this)"><div class="ten-circle" style="background:linear-gradient(135deg,#fde8d8,#f5c8a8)"></div><div><div class="ten-name">Açık Ten</div><div class="ten-desc">Pembe veya sarı alt ton</div></div></button>
+      <button class="ten-btn" onclick="secTen('orta',this)"><div class="ten-circle" style="background:linear-gradient(135deg,#d4a878,#c08850)"></div><div><div class="ten-name">Orta Ten</div><div class="ten-desc">Zeytin veya buğday tonu</div></div></button>
+      <button class="ten-btn" onclick="secTen('esmer',this)"><div class="ten-circle" style="background:linear-gradient(135deg,#a06838,#885028)"></div><div><div class="ten-name">Esmer Ten</div><div class="ten-desc">Koyu bronz veya kahve</div></div></button>
+      <button class="ten-btn" onclick="secTen('koyu',this)"><div class="ten-circle" style="background:linear-gradient(135deg,#5a3018,#3a1808)"></div><div><div class="ten-name">Koyu Ten</div><div class="ten-desc">Derin kahve tonu</div></div></button>
+    </div>
+  </div>
+
+  <button class="cta-btn" id="ctaBtn" onclick="gosterSonuc()" disabled style="display:none">Stilimi Oluştur ✨</button>
+
+  <!-- SONUÇ -->
+  <div class="result-card" id="resultCard">
+    <div class="result-header">
+      <div class="result-dress" id="resultDress"></div>
+      <div>
+        <div class="result-ortam-badge" id="resultOrtam"></div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-sub" id="resultSub"></div>
+      </div>
+    </div>
+    <div class="result-tabs">
+      <button class="rtab active" onclick="switchTab('makyaj',this)"><span class="ti">💄</span>Makyaj</button>
+      <button class="rtab" onclick="switchTab('sac',this)"><span class="ti">💇‍♀️</span>Saç</button>
+      <button class="rtab" onclick="switchTab('ayak',this)"><span class="ti">👠</span>Ayakkabı</button>
+      <button class="rtab" onclick="switchTab('canta',this)"><span class="ti">👜</span>Çanta</button>
+      <button class="rtab" onclick="switchTab('taki',this)"><span class="ti">💍</span>Takı</button>
+    </div>
+    <div class="stil-body">
+      <div class="tab-content active" id="tab-makyaj"></div>
+      <div class="tab-content" id="tab-sac"></div>
+      <div class="tab-content" id="tab-ayak"></div>
+      <div class="tab-content" id="tab-canta"></div>
+      <div class="tab-content" id="tab-taki"></div>
+    </div>
+  </div>
+
+  <div class="trend-wrap">
+    <div class="divider">Hızlı Kombinler</div>
+    <div class="trend-grid" id="trendGrid"></div>
+  </div>
+
+</div>
+
+<footer>© 2025 STARSTIL — Trendleri takip et, stilini keşfet 💕</footer>
+
+<script>
+const ORTAMLAR = [
+  {id:'dugun', icon:'💍', ad:'Düğün / Nişan', desc:'Resmi davetler'},
+  {id:'yemek', icon:'🍽️', ad:'Özel Yemek', desc:'Davet, restoran'},
+  {id:'ofis', icon:'🏢', ad:'İş / Ofis', desc:'Profesyonel ortam'},
+  {id:'gunluk', icon:'🛍️', ad:'Günlük / Sokak', desc:'Alışveriş, buluşma'},
+  {id:'gece', icon:'🌙', ad:'Gece / Parti', desc:'Kulüp, eğlence'},
+  {id:'piknik', icon:'🌿', ad:'Piknik / Doğa', desc:'Açık hava aktivite'},
+];
+
+const KIYAFETLER = {
+  dugun: [{id:'abiye', icon:'👗', ad:'Abiye'},{id:'koktey', icon:'🥂', ad:'Kokteyl'},{id:'takim', icon:'👘', ad:'Takım Elbise'}],
+  yemek: [{id:'elbise', icon:'👗', ad:'Elbise'},{id:'bluz', icon:'👚', ad:'Bluz & Pantolon'},{id:'etek', icon:'🩱', ad:'Etek & Üst'}],
+  ofis: [{id:'takim', icon:'👔', ad:'Takım'},{id:'bluz', icon:'👚', ad:'Bluz & Pantolon'},{id:'etek', icon:'🩱', ad:'Etek & Ceket'}],
+  gunluk: [{id:'jean', icon:'👖', ad:'Jean & Üst'},{id:'elbise', icon:'👗', ad:'Günlük Elbise'},{id:'esofman', icon:'🧥', ad:'Spor / Rahat'}],
+  gece: [{id:'mini', icon:'✨', ad:'Mini Elbise'},{id:'abiye', icon:'👗', ad:'Gece Elbisesi'},{id:'deri', icon:'🖤', ad:'Deri & Kombini'}],
+  piknik: [{id:'elbise', icon:'🌸', ad:'Yazlık Elbise'},{id:'jean', icon:'👖', ad:'Jean & Tişört'},{id:'sort', icon:'🩳', ad:'Şort & Üst'}],
+};
+
+const RENKLER = [
+  {id:'kirmizi',ad:'Kırmızı',hex:'#c0392b',tip:'solid'},
+  {id:'bordo',ad:'Bordo',hex:'#7b1c2e',tip:'dark'},
+  {id:'pembe',ad:'Pembe',hex:'#e07aab',tip:'solid'},
+  {id:'pudra',ad:'Pudra',hex:'#f0c4d4',tip:'light'},
+  {id:'turuncu',ad:'Turuncu',hex:'#e07840',tip:'solid'},
+  {id:'sari',ad:'Sarı',hex:'#e8c840',tip:'solid'},
+  {id:'yesil',ad:'Yeşil',hex:'#2e8c5c',tip:'solid'},
+  {id:'mint',ad:'Mint',hex:'#5dcfb0',tip:'soft'},
+  {id:'mavi',ad:'Mavi',hex:'#2a7cc0',tip:'solid'},
+  {id:'lacivert',ad:'Lacivert',hex:'#1a2e5a',tip:'dark'},
+  {id:'mor',ad:'Mor',hex:'#7c4ca0',tip:'solid'},
+  {id:'lila',ad:'Lila',hex:'#c0a0e0',tip:'soft'},
+  {id:'beyaz',ad:'Beyaz',hex:'#f5f0eb',tip:'light'},
+  {id:'krem',ad:'Krem',hex:'#e8d8b8',tip:'soft'},
+  {id:'siyah',ad:'Siyah',hex:'#1a1a1a',tip:'dark'},
+];
+
+function dressSVG(hex,tip,size=70){
+  const id=hex.replace('#','');
+  const isDark=tip==='dark';
+  const isLight=tip==='light';
+  const shade=isDark?'rgba(255,255,255,0.12)':'rgba(0,0,0,0.12)';
+  const light=isDark?'rgba(255,255,255,0.2)':'rgba(255,255,255,0.55)';
+  const stroke=isLight?'#d0c8c0':'none';
+  const h=size*1.5;
+  return `<svg class="dress-svg" style="width:${size}px;height:${h}px" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g${id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${hex}"/><stop offset="100%" stop-color="${hex}" stop-opacity="0.8"/></linearGradient>
+      <linearGradient id="l${id}" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="${light}" stop-opacity="0.6"/><stop offset="40%" stop-color="${light}" stop-opacity="0"/><stop offset="100%" stop-color="${shade}" stop-opacity="0.3"/></linearGradient>
+      <linearGradient id="f${id}" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="${light}" stop-opacity="0"/><stop offset="100%" stop-color="${shade}" stop-opacity="0.25"/></linearGradient>
+      <filter id="sf${id}"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="${isDark?'rgba(0,0,0,0.4)':'rgba(0,0,0,0.2)'}"/></filter>
+    </defs>
+    <path d="M30 8 Q28 4 26 2 Q24 1 23 3 L22 12 Q25 10 30 10 Z" fill="url(#g${id})" stroke="${stroke}" stroke-width="0.3"/>
+    <path d="M50 8 Q52 4 54 2 Q56 1 57 3 L58 12 Q55 10 50 10 Z" fill="url(#g${id})" stroke="${stroke}" stroke-width="0.3"/>
+    <path d="M22 12 Q24 8 30 7 Q40 7 50 7 Q56 8 58 12 L57 14 Q52 11 40 10.5 Q28 11 23 14 Z" fill="url(#g${id})" stroke="${stroke}" stroke-width="0.3"/>
+    <path d="M23 14 Q28 11 40 10.5 Q52 11 57 14 L55 38 Q48 34 40 33 Q32 34 25 38 Z" fill="url(#g${id})" filter="url(#sf${id})" stroke="${stroke}" stroke-width="0.3"/>
+    <path d="M25 38 Q32 34 40 33 Q48 34 55 38 L54 46 Q47 42 40 41 Q33 42 26 46 Z" fill="url(#g${id})" stroke="${stroke}" stroke-width="0.3"/>
+    <path d="M26 46 Q33 42 40 41 Q47 42 54 46 L66 108 Q54 114 40 115 Q26 114 14 108 Z" fill="url(#g${id})" stroke="${stroke}" stroke-width="0.3"/>
+    <path d="M26 46 Q33 42 40 41 L40 115 Q26 114 14 108 Z" fill="url(#f${id})" opacity="0.4"/>
+    <path d="M23 14 Q26 11 30 10 L28 46 Q25.5 42 26 46 L25 38 Z" fill="url(#l${id})" opacity="0.7"/>
+    <path d="M28 46 L22 108 Q18 106 14 108 L26 46 Z" fill="url(#l${id})" opacity="0.5"/>
+    <path d="M30 10 Q35 18 40 20 Q45 18 50 10" stroke="${isDark?'rgba(255,255,255,0.2)':'rgba(255,255,255,0.5)'}" stroke-width="0.6" fill="none"/>
+    <path d="M26 44 Q33 40 40 39 Q47 40 54 44" stroke="${isDark?'rgba(255,255,255,0.15)':'rgba(0,0,0,0.1)'}" stroke-width="0.5" fill="none"/>
+    <path d="M20 95 Q40 99 60 95 L66 108 Q54 114 40 115 Q26 114 14 108 Z" fill="${shade}" opacity="0.15"/>
+  </svg>`;
+}
+
+let secilenOrtam=null, secilenKiyafet=null, secilenRenk=null, secilenTen=null;
+
+// Ortam grid
+const ortamGrid=document.getElementById('ortamGrid');
+ORTAMLAR.forEach(o=>{
+  const btn=document.createElement('button');
+  btn.className='ortam-btn';
+  btn.innerHTML=`<span class="ortam-icon">${o.icon}</span><div class="ortam-ad">${o.ad}</div><div class="ortam-desc">${o.desc}</div>`;
+  btn.onclick=()=>secOrtam(o.id,btn);
+  ortamGrid.appendChild(btn);
+});
+
+function secOrtam(id,btn){
+  document.querySelectorAll('.ortam-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  secilenOrtam=id; secilenKiyafet=null; secilenRenk=null;
+  // Kıyafet göster
+  const kiyafetWrap=document.getElementById('kiyafetWrap');
+  kiyafetWrap.style.display='block';
+  const kiyafetGrid=document.getElementById('kiyafetGrid');
+  kiyafetGrid.innerHTML='';
+  const langKiyafetler = (LANG[currentLang||'tr'].kiyafetler[id]) || KIYAFETLER[id];
+  KIYAFETLER[id].forEach((k,i)=>{
+    const btn2=document.createElement('button');
+    btn2.className='kiyafet-btn';
+    const kAd = langKiyafetler[i]?.ad || k.ad;
+    btn2.innerHTML=`<span class="kiyafet-icon">${k.icon}</span><div class="kiyafet-ad">${kAd}</div>`;
+    btn2.onclick=()=>secKiyafet(k.id,btn2);
+    kiyafetGrid.appendChild(btn2);
+  });
+  document.getElementById('renkWrap').style.display='none';
+  document.getElementById('tenWrap').style.display='none';
+  document.getElementById('ctaBtn').style.display='none';
+  document.getElementById('resultCard').classList.remove('show');
+  kiyafetWrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function secKiyafet(id,btn){
+  document.querySelectorAll('.kiyafet-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  secilenKiyafet=id; secilenRenk=null;
+  // Renk göster
+  const renkWrap=document.getElementById('renkWrap');
+  renkWrap.style.display='block';
+  const renkGrid=document.getElementById('renkGrid');
+  renkGrid.innerHTML='';
+  RENKLER.forEach((r,i)=>{
+    const kart=document.createElement('div');
+    kart.className='renk-kart';
+    const renkAd = (LANG[currentLang||'tr'].renkler[i]) || r.ad;
+    kart.innerHTML=`<div class="renk-visual">${dressSVG(r.hex,r.tip,65)}</div><div class="renk-ad">${renkAd}</div>`;
+    kart.onclick=()=>secRenk(r.id,kart);
+    renkGrid.appendChild(kart);
+  });
+  document.getElementById('tenWrap').style.display='none';
+  document.getElementById('ctaBtn').style.display='none';
+  renkWrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function secRenk(id,el){
+  document.querySelectorAll('.renk-kart').forEach(k=>k.classList.remove('selected'));
+  el.classList.add('selected');
+  secilenRenk=id;
+  document.getElementById('tenWrap').style.display='block';
+  document.getElementById('ctaBtn').style.display='block';
+  document.getElementById('tenWrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function secTen(ten,btn){
+  document.querySelectorAll('.ten-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  secilenTen=ten;
+  checkReady();
+}
+
+function checkReady(){ document.getElementById('ctaBtn').disabled=!(secilenOrtam&&secilenKiyafet&&secilenRenk&&secilenTen); }
+
+function switchTab(tab,btn){
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// STİL VERİTABANI
+function getStil(ortam, kiyafet, renk, ten){
+  const renkObj = RENKLER.find(r=>r.id===renk);
+  const ortamObj = ORTAMLAR.find(o=>o.id===ortam);
+  const lang = currentLang || 'tr';
+  const T = LANG[lang];
+  const renkIdx = RENKLER.findIndex(r=>r.id===renk);
+  const ortamIdx = ORTAMLAR.findIndex(o=>o.id===ortam);
+  const renkAdi = T.renkler[renkIdx] || renkObj?.ad || '';
+  const ortamAdi = T.ortamlar[ortamIdx]?.ad || ortamObj?.ad || '';
+
+  // Ortama göre makyaj yoğunluğu
+  const yogunlukTR = {dugun:'görkemli',yemek:'zarif',ofis:'minimal',gunluk:'doğal',gece:'dramatik',piknik:'hafif'};
+  const yogunlukEN = {dugun:'glamorous',yemek:'elegant',ofis:'minimal',gunluk:'natural',gece:'dramatic',piknik:'light'};
+  const yogunluk = lang==='en' ? yogunlukEN : yogunlukTR;
+  const yon = yogunluk[ortam];
+
+  // Renk bazlı makyaj
+  const renkMakyaj = {
+    kirmizi:{ruj:'#d4908c',rujAdi:'Soft Coral Nude',far:'#c8a090',farAdi:'Champagne'},
+    bordo:{ruj:'#c89090',rujAdi:'Berry Nude',far:'#d4a8a8',farAdi:'Nude Rose'},
+    pembe:{ruj:'#e04080',rujAdi:'Hot Pink',far:'#e0a0c0',farAdi:'Soft Pink'},
+    pudra:{ruj:'#e8b0c0',rujAdi:'Petal Pink',far:'#d0b0d0',farAdi:'Rose Gold'},
+    turuncu:{ruj:'#d09060',rujAdi:'Peachy Nude',far:'#c09060',farAdi:'Warm Brown'},
+    sari:{ruj:'#d4a880',rujAdi:'Nude Peach',far:'#c0a060',farAdi:'Warm Gold'},
+    yesil:{ruj:'#d0a878',rujAdi:'Peachy Nude',far:'#a09060',farAdi:'Olive'},
+    mint:{ruj:'#c08090',rujAdi:'Soft Berry',far:'#d0a0b0',farAdi:'Soft Pink'},
+    mavi:{ruj:'#e0b890',rujAdi:'Nude Peach',far:'#c0a890',farAdi:'Nude Taupe'},
+    lacivert:{ruj:'#c09060',rujAdi:'Warm Nude',far:'#b09070',farAdi:'Warm Nude'},
+    mor:{ruj:'#c08090',rujAdi:'Berry Nude',far:'#c0a0d0',farAdi:'Lilac'},
+    lila:{ruj:'#c090c0',rujAdi:'Lilac',far:'#c0a0d0',farAdi:'Soft Purple'},
+    beyaz:{ruj:'#d4a078',rujAdi:'Nude Coral',far:'#c09060',farAdi:'Bronze'},
+    krem:{ruj:'#d0a870',rujAdi:'Warm Nude',far:'#c0a070',farAdi:'Warm Brown'},
+    siyah:{ruj:'#e8a0b8',rujAdi:'Dusty Rose',far:'#c0a0c0',farAdi:'Lavender'},
+  };
+  const mk = renkMakyaj[renk] || {ruj:'#c08090',rujAdi:'Nude Mauve',far:'#b09090',farAdi:'Warm Brown'};
+
+  // Ten bazlı allık
+  const allıklar = {açık:{renk:'#f0b8b0',ad:'Baby Blush'},orta:{renk:'#d08070',ad:'Peach Glow'},esmer:{renk:'#c06050',ad:'Terra Cotta'},koyu:{renk:'#904030',ad:'Rich Mahogany'}};
+  const allık = allıklar[ten];
+
+  // Ortam + Renk kombinasyonu makyaj açıklaması
+  const ortamMakyajAciklamaTR = {
+    dugun: `Düğün makyajı ${yon} ve kalıcı olmalı. Primer ile başlayın, tam örtücü fondöten uygulayın. Baking tekniğiyle uzun ömürlü makyaj elde edin. Setting spray ile sabitleyin.`,
+    yemek: `Özel yemek için ${yon} bir makyaj. Cilt hazırlığına önem verin. Orta yoğunlukta fondöten, göz makyajını detaylı yapın. Gece ışığında parlayan bir yüz hedefleyin.`,
+    ofis: `Ofis için ${yon} ve profesyonel makyaj. Hafif örtücü fondöten, doğal göz, hafif allık. Çok dramatik renk ve far kullanmaktan kaçının.`,
+    gunluk: `Günlük için ${yon} ve hızlı makyaj. BB krem ya da hafif fondöten yeterli. Doğal görünüm hedefleyin — 15 dakikada biter.`,
+    gece: `Gece için ${yon} ve çarpıcı makyaj. Smoky göz, bold ruj, yoğun highlight. Gece ışıklarında öne çıkacak bir look yaratın.`,
+    piknik: `Piknik için ${yon} ve hafif makyaj. SPF'li BB krem, tinted lip balm, hafif allık. Nem geçirmez ürünler tercih edin.`,
+  };
+  const ortamMakyajAciklamaEN = {
+    dugun: `Wedding makeup should be ${yon} and long-lasting. Start with primer, apply full-coverage foundation. Use baking technique for all-day wear. Finish with setting spray.`,
+    yemek: `For a special dinner, go for ${yon} makeup. Focus on skin prep. Medium coverage foundation, detailed eye makeup. Aim for a glowing face under evening lights.`,
+    ofis: `Office makeup should be ${yon} and professional. Light foundation, natural eyes, soft blush. Avoid overly dramatic colors and eyeshadow.`,
+    gunluk: `For everyday, keep it ${yon} and quick. BB cream or light foundation is enough. Aim for a natural look — done in 15 minutes.`,
+    gece: `Night out calls for ${yon} makeup. Smoky eye, bold lip, heavy highlight. Create a look that stands out under party lights.`,
+    piknik: `For a picnic, keep it ${yon} and fresh. SPF BB cream, tinted lip balm, light blush. Use waterproof products.`,
+  };
+  const ortamMakyajAciklama = lang==='en' ? ortamMakyajAciklamaEN : ortamMakyajAciklamaTR;
+
+  const isTR = lang !== 'en';
+
+  return {
+    ortamAdi,
+    makyaj: {
+      adimlar: [
+        {num:1,
+          baslik: isTR?'Cilt Hazırlığı':'Skin Prep',
+          renk:'#f5e0d8',
+          text: isTR
+            ?`${ortamMakyajAciklama[ortam]} ${renkAdi} kıyafetin yanında ten ${yon} görünmeli.`
+            :`${ortamMakyajAciklama[ortam]} Your ${renkAdi} outfit calls for ${yon} skin.`,
+          ipucu: isTR
+            ?(ortam==='gece'?'Baking tekniği ve setting spray şart.':ortam==='piknik'?'SPF unutmayın — açık havada güneş koruyucu şart.':'Primer makyajın kalıcılığını iki katına çıkarır.')
+            :(ortam==='gece'?'Baking technique and setting spray are essential.':ortam==='piknik'?'Don\'t forget SPF — sun protection is key outdoors.':'Primer doubles the staying power of your makeup.')
+        },
+        {num:2,
+          baslik: isTR?`Göz Farı — ${mk.farAdi}`:`Eye Shadow — ${mk.farAdi}`,
+          renk:mk.far,
+          text: isTR
+            ?`${mk.farAdi} tonunu tüm göz kapağına uygulayın. ${ortam==='gece'?'Çukura koyu ton ekleyin, metalik far ile dramatize edin.':ortam==='ofis'?'Minimal ve doğal tutun — sert renklerden kaçının.':ortam==='dugun'?'Kalıcı göz farı kullanın, blending yapın.':'Kapağa açık, çukura biraz daha koyu ton uygulayın.'} ${renkAdi} kıyafetle uyumlu ton seçin.`
+            :`Apply ${mk.farAdi} shade all over the lid. ${ortam==='gece'?'Add a darker shade to the crease and dramatize with metallic shadow.':ortam==='ofis'?'Keep it minimal and natural — avoid harsh colors.':ortam==='dugun'?'Use long-wearing eyeshadow, blend well.':'Apply a lighter shade on the lid, darker in the crease.'} Choose a tone that complements your ${renkAdi} outfit.`,
+          ipucu: isTR?'Blending fırçasıyla farları iyice yedirin — keskin sınırlar amatörce görünür.':'Blend well with a blending brush — harsh lines look amateur.'
+        },
+        {num:3,
+          baslik: isTR?'Eyeliner & Maskara':'Eyeliner & Mascara',
+          renk:'#2a1a1a',
+          text: isTR
+            ?`${ortam==='gece'||ortam==='dugun'?'Kalın ve belirgin eyeliner, iki katlı maskara uygulayın. Takma kirpik bu ortam için harika.':ortam==='ofis'||ortam==='piknik'?'İnce ve doğal eyeliner, bir kat maskara yeterli.':'İnce eyeliner kirpik diplerine, iki kat maskara.'} Kirpik kıvırıcı kullandıktan sonra maskara süreyin.`
+            :`${ortam==='gece'||ortam==='dugun'?'Apply bold eyeliner and two coats of mascara. False lashes are perfect for this occasion.':ortam==='ofis'||ortam==='piknik'?'Thin natural eyeliner and one coat of mascara is enough.':'Thin eyeliner at the lash line, two coats of mascara.'} Always apply mascara after using an eyelash curler.`,
+          ipucu: isTR?'Kirpik kıvırıcı kullandıktan hemen sonra maskara sürmek en uzun kıvrımı verir.':'Applying mascara right after curling gives the longest-lasting curl.'
+        },
+        {num:4,
+          baslik: isTR?`Allık — ${allık.ad}`:`Blush — ${allık.ad}`,
+          renk:allık.renk,
+          text: isTR
+            ?`${allık.ad} allığı yanakların elma bölgesine ${ortam==='gece'?'yoğunca':ortam==='piknik'?'hafifçe':'dengeli şekilde'} uygulayın. ${ortam==='dugun'||ortam==='gece'?'Highlighter elmacık kemiğine ekleyerek ışıltı katın.':'Şakaklara doğru hafifçe blendleyin.'}`
+            :`Apply ${allık.ad} blush ${ortam==='gece'?'heavily':ortam==='piknik'?'lightly':'evenly'} on the apples of your cheeks. ${ortam==='dugun'||ortam==='gece'?'Add highlighter on the cheekbones for a luminous glow.':'Blend lightly toward the temples.'}`,
+          ipucu: isTR?'Fan fırçayla az miktarda uygulayın, gerekirse artırın.':'Apply a small amount with a fan brush, build up if needed.'
+        },
+        {num:5,
+          baslik: isTR?`Ruj — ${mk.rujAdi}`:`Lip Color — ${mk.rujAdi}`,
+          renk:mk.ruj,
+          text: isTR
+            ?`${mk.rujAdi} tonu ${renkAdi} kıyafetle mükemmel uyum sağlar. Dudak kalemiyle önce konturlayın. ${ortam==='gece'?'Mat bitişli ruj gece boyu kalır.':ortam==='piknik'?'Tinted lip balm daha rahat ve pratik.':ortam==='ofis'?'Saten bitişli profesyonel görünüm.':'Saten ya da mat bitişli tercih edin.'} İlk katı dokuyla alın, ikinci katı uygulayın.`
+            :`${mk.rujAdi} pairs perfectly with your ${renkAdi} outfit. Outline with lip liner first. ${ortam==='gece'?'Matte finish lasts all night.':ortam==='piknik'?'Tinted lip balm is more comfortable and practical.':ortam==='ofis'?'Satin finish looks professional.':'Choose satin or matte finish.'} Blot the first coat, then apply a second.`,
+          ipucu: isTR?'Lip liner rujtaşmasını önler ve dudaklara dolgunluk verir.':'Lip liner prevents bleeding and makes lips look fuller.'
+        },
+      ],
+      stilipucu: isTR
+        ?`${ortamAdi} için ${yon} makyaj — ${renkAdi} kıyafetle harika uyum. ${ten==='esmer'||ten==='koyu'?'Altın highlight ve metalik detaylar bu tende muhteşem parlar.':ten==='açık'?'Açık tende renkler çok parlak ve canlı görünür.':'Bu ten kombinasyonu çok güçlü — kendinize güvenin!'}`
+        :`${yon} makeup for ${ortamAdi} — a perfect match with your ${renkAdi} outfit. ${ten==='esmer'||ten==='koyu'?'Gold highlight and metallic details look stunning on this skin tone.':ten==='açık'?'Colors look vibrant and bright on fair skin.':'This combination is powerful — own it!'}`
+    },
+    sac: {
+      model: {
+        ad: isTR
+          ?(ortam==='dugun'?'Şık Topuz veya Yarım Topuz':ortam==='gece'?'Dalgalı veya Yüksek Topuz':ortam==='ofis'?'Low Bun veya Düz Saç':ortam==='piknik'?'At Kuyruğu veya Örgü':'Dalgalı veya Serbest')
+          :(ortam==='dugun'?'Elegant Updo or Half-Up':ortam==='gece'?'Wavy or High Bun':ortam==='ofis'?'Low Bun or Straight':ortam==='piknik'?'Ponytail or Braid':'Wavy or Loose'),
+        text: isTR
+          ?(ortam==='dugun'?'Düğün için şık bir topuz veya yarım topuz. Birkaç tel saçı yüze bırakın. Saç aksesuarı mutlaka ekleyin — inci toka ya da çiçek.'
+            :ortam==='gece'?'Gece için dalgalı serbest saç ya da yüksek topuz. Volüm şart — saç ne kadar güçlüyse look o kadar etkileyici.'
+            :ortam==='ofis'?'Ofis için düzenli ve şık saç. Low bun ya da düz saç profesyonel görünüm sağlar.'
+            :ortam==='piknik'?'Piknik için pratik ve şık. At kuyruğu ya da gevşek örgü ideal.'
+            :'Günlük için dalgalı serbest saç ya da yarım topuz çok şık.')
+          :(ortam==='dugun'?'For weddings, an elegant updo or half-up style. Leave a few strands around the face. Don\'t forget a hair accessory — pearl pin or flower.'
+            :ortam==='gece'?'For nights out, go with wavy loose hair or a high bun. Volume is key — the bigger the hair, the more powerful the look.'
+            :ortam==='ofis'?'Keep hair neat and polished for the office. A low bun or straight hair looks professional.'
+            :ortam==='piknik'?'Practical and chic for a picnic. A ponytail or loose braid is ideal. Add a hat for sun protection.'
+            :'Wavy loose hair or a half-up style is perfect for everyday.'),
+        alt: isTR
+          ?('Alternatif: '+(ortam==='dugun'?'French twist veya dalgalı yarım açık saç.':ortam==='gece'?'Sleek düz saç çok sofistike görünür.':ortam==='ofis'?'At kuyruğu veya yarım topuz da şık.':'Topuz veya at kuyruğu da pratik alternatif.'))
+          :('Alternative: '+(ortam==='dugun'?'French twist or soft wavy half-down.':ortam==='gece'?'Sleek straight hair looks very sophisticated.':ortam==='ofis'?'A ponytail or half-bun also works.':'A bun or ponytail is a practical alternative.'))
+      },
+      renk: {
+        ad: isTR
+          ?(ten==='açık'?'Sarışın veya Açık Kestane':ten==='orta'?'Kestane veya Bakır':ten==='esmer'?'Siyah veya Bakır':'Siyah veya Koyu Kahve')
+          :(ten==='açık'?'Blonde or Light Brown':ten==='orta'?'Chestnut or Copper':ten==='esmer'?'Black or Copper':'Black or Dark Brown'),
+        text: isTR
+          ?`${ten==='açık'?'Açık ten için sarışın, bal ya da açık kestane':ten==='orta'?'Orta ten için kestane, bakır ya da koyu kahve':ten==='esmer'?'Esmer ten için siyah, bakır ya da kızıl':'Koyu ten için siyah ya da koyu kahve'} saç rengi ${renkAdi} kıyafetle çok uyumlu görünür.`
+          :`${ten==='açık'?'Blonde, honey or light brown':ten==='orta'?'Chestnut, copper or dark brown':ten==='esmer'?'Black, copper or auburn':'Black or dark brown'} hair complements your ${renkAdi} outfit beautifully.`,
+        swatches: ten==='açık'
+          ?[{renk:'#e8d080',ad:isTR?'Sarışın':'Blonde'},{renk:'#c0a060',ad:isTR?'Bal':'Honey'},{renk:'#8a5028',ad:isTR?'Kestane':'Chestnut'}]
+          :ten==='orta'?[{renk:'#8a5028',ad:isTR?'Kestane':'Chestnut'},{renk:'#c06030',ad:isTR?'Bakır':'Copper'},{renk:'#1a1010',ad:isTR?'Siyah':'Black'}]
+          :ten==='esmer'?[{renk:'#1a1010',ad:isTR?'Siyah':'Black'},{renk:'#c06030',ad:isTR?'Bakır':'Copper'},{renk:'#8a2010',ad:isTR?'Kızıl':'Auburn'}]
+          :[{renk:'#1a1010',ad:isTR?'Siyah':'Black'},{renk:'#2a1a10',ad:isTR?'Koyu Kahve':'Dark Brown'}]
+      },
+      ipucu: isTR
+        ?(ortam==='gece'?'Saça serum süreyin — parlak saç gece ışıklarında çok etkileyici.':ortam==='piknik'?'Saçı güneşten korumak için SPF içeren saç spreyi kullanın.':'Saçı temiz ve parlak tutun — bakımlı saç her looku güçlendirir.')
+        :(ortam==='gece'?'Apply serum — glossy hair looks stunning under evening lights.':ortam==='piknik'?'Use an SPF hair spray to protect your hair from the sun.':'Keep hair clean and shiny — healthy hair elevates every look.')
+    },
+    ayak: {
+      ad: isTR
+        ?(ortam==='dugun'?'Topuklu İskarpin veya Stiletto':ortam==='gece'?'Yüksek Topuklu Sandalet':ortam==='ofis'?'Küçük Topuklu veya Oxford':ortam==='piknik'?'Sneaker veya Sandalet':'Günlük Sandalet veya Düşük Topuk')
+        :(ortam==='dugun'?'Heeled Pump or Stiletto':ortam==='gece'?'High-Heeled Sandal':ortam==='ofis'?'Low Heel or Oxford':ortam==='piknik'?'Sneaker or Sandal':'Casual Sandal or Low Heel'),
+      text: isTR
+        ?(ortam==='dugun'?`Düğün için en az 6-7 cm topuklu şık iskarpin. Tüm gece ayakta olacaksınız — tabana jel ped koyun. ${renkAdi} kıyafetle nude ya da metalik renk en şık.`
+          :ortam==='gece'?`Gece için yüksek topuklu sandalet. ${renkAdi} ile altın metalik en güçlü kombinasyon.`
+          :ortam==='ofis'?`Ofis için küçük topuklu iskarpin ya da Oxford. Çok yüksek topuktan kaçının.`
+          :ortam==='piknik'?`Piknik için rahat ve pratik. Beyaz sneaker ya da düz sandalet ideal.`
+          :`Günlük için rahat ve şık. Düşük topuk ya da düz sandalet.`)
+        :(ortam==='dugun'?`At least 6-7cm heels for a wedding. You\'ll be on your feet all night — add gel insoles. Nude or metallic goes best with ${renkAdi}.`
+          :ortam==='gece'?`High-heeled sandals for a night out. Gold metallic is the strongest combo with ${renkAdi}.`
+          :ortam==='ofis'?`Low-heeled pumps or Oxford shoes for the office. Avoid very high heels — professional but comfortable.`
+          :ortam==='piknik'?`Comfortable and practical for a picnic. White sneakers or flat sandals are ideal. No heels.`
+          :`Comfortable and stylish for everyday. Low heel or flat sandal. Sneakers if you walk a lot.`),
+      alt: isTR
+        ?(ortam==='dugun'?'Alternatif: Altın ya da gümüş metalik topuklu.':ortam==='gece'?'Alternatif: Platformlu ayakkabı da çok trend.':'Alternatif: Nude iskarpin her kombinasyonla uyumlu.')
+        :(ortam==='dugun'?'Alternative: Gold or silver metallic heels.':ortam==='gece'?'Alternative: Platform shoes are also very trendy.':'Alternative: Nude pumps go with everything.'),
+      swatches: ortam==='piknik'
+        ?[{renk:'#ffffff',ad:isTR?'Beyaz':'White'},{renk:'#e8c8a0',ad:isTR?'Bej':'Beige'},{renk:'#1a1a1a',ad:isTR?'Siyah':'Black'}]
+        :renk==='siyah'||renk==='lacivert'||renk==='bordo'
+          ?[{renk:'#c8a060',ad:isTR?'Altın':'Gold'},{renk:'#c0c0c0',ad:isTR?'Gümüş':'Silver'},{renk:'#e8c8a0',ad:'Nude'}]
+          :[{renk:'#e8c8a0',ad:'Nude'},{renk:'#c8a060',ad:isTR?'Altın':'Gold'},{renk:'#1a1a1a',ad:isTR?'Siyah':'Black'}]
+    },
+    canta: {
+      ad: isTR
+        ?(ortam==='dugun'?'Clutch veya Mini Çanta':ortam==='gece'?'Metalik Clutch':ortam==='ofis'?'Deri Çanta veya Evrak Çantası':ortam==='piknik'?'Bez Çanta veya Sırt Çantası':'Mini Çanta veya Crossbody')
+        :(ortam==='dugun'?'Clutch or Mini Bag':ortam==='gece'?'Metallic Clutch':ortam==='ofis'?'Leather Bag or Tote':ortam==='piknik'?'Tote or Backpack':'Mini Bag or Crossbody'),
+      text: isTR
+        ?(ortam==='dugun'?`Düğün için zarif bir clutch. Altın ya da gümüş metalik en şık tercih.`
+          :ortam==='gece'?`Gece için metalik clutch şart. ${renkAdi} kıyafetle zıt renk çanta cesur bir look.`
+          :ortam==='ofis'?`Ofis için deri çanta ya da evrak çantası. Koyu renkler daha profesyonel.`
+          :ortam==='piknik'?`Piknik için hafif ve pratik bez çanta ya da sırt çantası.`
+          :`Günlük için crossbody ya da mini çanta. ${renkAdi} ile zıt renk çanta dikkat çekici.`)
+        :(ortam==='dugun'?`An elegant clutch for a wedding. Gold or silver metallic is the most chic choice.`
+          :ortam==='gece'?`A metallic clutch is a must for nights out. A contrasting bag with your ${renkAdi} outfit is a bold statement.`
+          :ortam==='ofis'?`A leather bag or tote for the office. Darker colors look more professional.`
+          :ortam==='piknik'?`A light and practical tote or backpack for a picnic.`
+          :`A crossbody or mini bag for everyday. A contrasting color with your ${renkAdi} outfit is eye-catching.`),
+      alt: isTR
+        ?('Alternatif: '+(ortam==='ofis'?'Tote çanta da şık ve kullanışlı.':ortam==='piknik'?'Renkli dokuma çanta çok trend.':'Siyah mini çanta her kombinde çalışır.'))
+        :('Alternative: '+(ortam==='ofis'?'A tote bag is chic and functional.':ortam==='piknik'?'A colorful woven bag is very trendy.':'A black mini bag works with every outfit.')),
+      swatches: ortam==='ofis'
+        ?[{renk:'#1a1a1a',ad:isTR?'Siyah':'Black'},{renk:'#8a5030',ad:isTR?'Kahve':'Brown'},{renk:'#1a2e5a',ad:isTR?'Lacivert':'Navy'}]
+        :ortam==='piknik'
+          ?[{renk:'#ffffff',ad:isTR?'Beyaz':'White'},{renk:'#f0c4d4',ad:isTR?'Pudra':'Blush'},{renk:'#e8d8b8',ad:isTR?'Krem':'Cream'}]
+          :[{renk:'#c8a060',ad:isTR?'Altın':'Gold'},{renk:'#c0c0c0',ad:isTR?'Gümüş':'Silver'},{renk:'#1a1a1a',ad:isTR?'Siyah':'Black'}]
+    },
+    taki: {
+      ad: isTR
+        ?(ortam==='dugun'?'Statement Takılar':ortam==='gece'?'Bold ve Parlak Takılar':ortam==='ofis'?'Minimal ve İnce Takılar':ortam==='piknik'?'Hafif ve Renkli Takılar':'Günlük ve Şık Takılar')
+        :(ortam==='dugun'?'Statement Jewelry':ortam==='gece'?'Bold & Sparkly Jewelry':ortam==='ofis'?'Minimal & Delicate Jewelry':ortam==='piknik'?'Light & Colorful Jewelry':'Everyday Chic Jewelry'),
+      text: isTR
+        ?(ortam==='dugun'?`Düğün için özel takılar. Tek statement parça seçin. ${ten==='esmer'||ten==='koyu'?'Altın bu tende muhteşem parlar.':'İnci ya da kristal çok zarif.'}`
+          :ortam==='gece'?`Gece için parlak ve dikkat çekici takılar. Büyük hoop küpe ya da chandelier küpe.`
+          :ortam==='ofis'?`Ofis için minimal takılar. İnce altın kolye, sade küpe. Çok büyük takılardan kaçının.`
+          :ortam==='piknik'?`Piknik için hafif takılar. Uzun kolye ya da renkli boncuk takı.`
+          :`Günlük için sade parçalar. Hoop küpe, ince bilezik ya da zincir kolye.`)
+        :(ortam==='dugun'?`Special jewelry for a wedding. Choose one statement piece. ${ten==='esmer'||ten==='koyu'?'Gold looks stunning on this skin tone.':'Pearls or crystals are very elegant.'}`
+          :ortam==='gece'?`Bold and eye-catching jewelry for the night. Large hoop or chandelier earrings.`
+          :ortam==='ofis'?`Minimal jewelry for the office. Thin gold necklace, simple earrings. Avoid oversized pieces.`
+          :ortam==='piknik'?`Light jewelry for a picnic. Long necklace or colorful beads.`
+          :`Simple pieces for everyday. Hoop earrings, thin bracelet or chain necklace.`),
+      alt: isTR
+        ?('Alternatif: '+(ortam==='dugun'?'Kristal ya da inci takılar klasik ve zarif.':ortam==='gece'?'Rhinestone ya da elmas taşlı takılar ışıltı katar.':ortam==='ofis'?'Saat ve ince bilezik şık ve sade.':'Doğal taş ya da ahşap takılar bohem his.'))
+        :('Alternative: '+(ortam==='dugun'?'Crystal or pearl jewelry is classic and elegant.':ortam==='gece'?'Rhinestone or diamond pieces add extra sparkle.':ortam==='ofis'?'A watch and thin bracelet is chic and understated.':'Natural stone or wood jewelry has a boho vibe.')),
+      swatches: ten==='esmer'||ten==='koyu'
+        ?[{renk:'#c8a060',ad:isTR?'Altın':'Gold'},{renk:'#c07030',ad:isTR?'Bakır':'Copper'},{renk:'#e8e8e8',ad:isTR?'Elmas':'Diamond'}]
+        :[{renk:'#c8a060',ad:isTR?'Altın':'Gold'},{renk:'#c0c0c0',ad:isTR?'Gümüş':'Silver'},{renk:'#f0ece0',ad:isTR?'İnci':'Pearl'}]
+    }
+  };
+}
+
+function gosterSonuc(){
+  const r = RENKLER.find(x=>x.id===secilenRenk);
+  const o = ORTAMLAR.find(x=>x.id===secilenOrtam);
+  const stil = getStil(secilenOrtam, secilenKiyafet, secilenRenk, secilenTen);
+  const tenAdi = {açık:'Açık Ten',orta:'Orta Ten',esmer:'Esmer Ten',koyu:'Koyu Ten'}[secilenTen];
+
+  document.getElementById('resultDress').innerHTML = dressSVG(r.hex, r.tip, 48);
+  document.getElementById('resultOrtam').textContent = o.icon + ' ' + o.ad;
+  document.getElementById('resultTitle').textContent = r.ad + ' · ' + (KIYAFETLER[secilenOrtam].find(k=>k.id===secilenKiyafet)?.ad || '');
+  document.getElementById('resultSub').textContent = tenAdi + ' · Kişisel stil rehberin';
+
+  // MAKYAJ
+  document.getElementById('tab-makyaj').innerHTML =
+    stil.makyaj.adimlar.map((a,i)=>`<div class="adim-kart" style="animation-delay:${i*0.07}s">
+      <div class="adim-hdr"><div class="adim-renk" style="background:${a.renk}"></div><div class="adim-baslik">${a.baslik}</div><div class="adim-num">${a.num}</div></div>
+      <div class="adim-text">${a.text}</div>
+      <div class="adim-ipucu">✦ ${a.ipucu}</div>
+    </div>`).join('') +
+    `<div class="stilist"><div class="stilist-label">✦ Stilist Notu</div><div class="stilist-text">${stil.makyaj.stilipucu}</div></div>`;
+
+  // SAÇ
+  document.getElementById('tab-sac').innerHTML = `
+    <div class="info-kart" style="border-left:3px solid #c8963c">
+      <div class="info-label">Önerilen Model</div>
+      <div class="info-ad">💆‍♀️ ${stil.sac.model.ad}</div>
+      <div class="info-text">${stil.sac.model.text}</div>
+      <div class="info-alt">${stil.sac.model.alt}</div>
+    </div>
+    <div class="info-kart" style="border-left:3px solid #7c4ca0">
+      <div class="info-label">Saç Rengi</div>
+      <div class="info-ad">🎨 ${stil.sac.renk.ad}</div>
+      <div class="info-text">${stil.sac.renk.text}</div>
+      <div class="chips">${stil.sac.renk.swatches.map(s=>`<div class="chip"><div class="chip-dot" style="background:${s.renk}"></div>${s.ad}</div>`).join('')}</div>
+    </div>
+    <div class="stilist"><div class="stilist-label">✦ Saç İpucu</div><div class="stilist-text">${stil.sac.ipucu}</div></div>`;
+
+  // AKSESUARlar
+  [['ayak','👠','Ayakkabı'],['canta','👜','Çanta'],['taki','💍','Takı']].forEach(([key,icon,baslik])=>{
+    const a = stil[key];
+    document.getElementById('tab-'+key).innerHTML = `
+      <div class="info-kart" style="border-left:3px solid var(--rose)">
+        <div class="info-label">En İyi Seçim</div>
+        <div class="info-ad">${icon} ${a.ad}</div>
+        <div class="info-text">${a.text}</div>
+        <div class="chips">${a.swatches.map(s=>`<div class="chip"><div class="chip-dot" style="background:${s.renk}"></div>${s.ad}</div>`).join('')}</div>
+        <div class="info-alt">${a.alt}</div>
+      </div>
+      <div class="stilist"><div class="stilist-label">✦ İpucu</div><div class="stilist-text">${a.alt}</div></div>`;
+  });
+
+  const card = document.getElementById('resultCard');
+  card.classList.add('show');
+  document.querySelectorAll('.rtab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===0));
+  setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+// TREND KOMBİNLER
+const TRENDLER=[
+  {ortam:'dugun',kiyafet:'abiye',renk:'kirmizi',ten:'orta',label:'Düğün · Kırmızı Abiye',desc:'Klasik & görkemli'},
+  {ortam:'gece',kiyafet:'mini',renk:'siyah',ten:'açık',label:'Gece · Siyah Mini',desc:'Dramatik & sofistike'},
+  {ortam:'yemek',kiyafet:'elbise',renk:'pudra',ten:'açık',label:'Yemek · Pudra Elbise',desc:'Feminen & zarif'},
+  {ortam:'gunluk',kiyafet:'jean',renk:'mavi',ten:'esmer',label:'Günlük · Mavi Jean',desc:'Casual & şık'},
+];
+const trendGrid=document.getElementById('trendGrid');
+TRENDLER.forEach(t=>{
+  const r=RENKLER.find(x=>x.id===t.renk);
+  const o=ORTAMLAR.find(x=>x.id===t.ortam);
+  const div=document.createElement('div');
+  div.className='trend-kart';
+  div.innerHTML=`<div class="trend-dress" style="background:linear-gradient(135deg,${r.hex}cc,${r.hex}88)">${dressSVG(r.hex,r.tip,55)}</div><div class="trend-info"><div class="trend-name">${t.label}</div><div class="trend-desc">${t.desc}</div></div>`;
+  div.onclick=()=>{
+    // Ortam seç
+    const ortamBtns=document.querySelectorAll('.ortam-btn');
+    ORTAMLAR.forEach((o2,i)=>{ if(o2.id===t.ortam){ ortamBtns[i].classList.add('selected'); secOrtam(t.ortam,ortamBtns[i]); } });
+    setTimeout(()=>{
+      const kiyafetBtns=document.querySelectorAll('.kiyafet-btn');
+      KIYAFETLER[t.ortam].forEach((k,i)=>{ if(k.id===t.kiyafet&&kiyafetBtns[i]){ secKiyafet(t.kiyafet,kiyafetBtns[i]); } });
+      setTimeout(()=>{
+        const renkKartlar=document.querySelectorAll('.renk-kart');
+        RENKLER.forEach((r2,i)=>{ if(r2.id===t.renk&&renkKartlar[i]){ secRenk(t.renk,renkKartlar[i]); } });
+        setTimeout(()=>{
+          const tenBtns=document.querySelectorAll('.ten-btn');
+          const tenMap={açık:0,orta:1,esmer:2,koyu:3};
+          tenBtns[tenMap[t.ten]].classList.add('selected');
+          secilenTen=t.ten; checkReady();
+          setTimeout(gosterSonuc,150);
+        },100);
+      },100);
+    },200);
+    document.querySelector('.steps').scrollIntoView({behavior:'smooth'});
+  };
+  trendGrid.appendChild(div);
+});
+
+let currentLang = 'tr';
+
+const LANG = {
+  tr: {
+    heroEyebrow:'Ortam · Renk · Uyum · Komple Stil',
+    heroTitle:'Gideceğin yere göre<br><em>komple stilin</em>',
+    heroSub:'Ortamı seç, kıyafetini belirle — makyajdan takıya her şey hazır.',
+    s1:'Adım 1 / 4', t1:'Nereye gidiyorsun?',
+    s2:'Adım 2 / 4', t2:'Ne giyiyorsun?',
+    s3:'Adım 3 / 4', t3:'Kıyafetin rengi ne?',
+    s4:'Adım 4 / 4', t4:'Ten rengin hangisine yakın?',
+    cta:'Stilimi Oluştur ✨',
+    trend:'Hızlı Kombinler',
+    footer:'© 2025 STARSTIL — Trendleri takip et, stilini keşfet 💕',
+    ortamlar:[
+      {ad:'Düğün / Nişan',desc:'Resmi davetler'},
+      {ad:'Özel Yemek',desc:'Davet, restoran'},
+      {ad:'İş / Ofis',desc:'Profesyonel ortam'},
+      {ad:'Günlük / Sokak',desc:'Alışveriş, buluşma'},
+      {ad:'Gece / Parti',desc:'Kulüp, eğlence'},
+      {ad:'Piknik / Doğa',desc:'Açık hava aktivite'},
+    ],
+    kiyafetler:{
+      dugun:[{ad:'Abiye'},{ad:'Kokteyl'},{ad:'Takım Elbise'}],
+      yemek:[{ad:'Elbise'},{ad:'Bluz & Pantolon'},{ad:'Etek & Üst'}],
+      ofis:[{ad:'Takım'},{ad:'Bluz & Pantolon'},{ad:'Etek & Ceket'}],
+      gunluk:[{ad:'Jean & Üst'},{ad:'Günlük Elbise'},{ad:'Spor / Rahat'}],
+      gece:[{ad:'Mini Elbise'},{ad:'Gece Elbisesi'},{ad:'Deri & Kombini'}],
+      piknik:[{ad:'Yazlık Elbise'},{ad:'Jean & Tişört'},{ad:'Şort & Üst'}],
+    },
+    renkler:['Kırmızı','Bordo','Pembe','Pudra','Turuncu','Sarı','Yeşil','Mint','Mavi','Lacivert','Mor','Lila','Beyaz','Krem','Siyah'],
+    tenler:['Açık Ten','Orta Ten','Esmer Ten','Koyu Ten'],
+    tenDesc:['Pembe veya sarı alt ton','Zeytin veya buğday tonu','Koyu bronz veya kahve','Derin kahve tonu'],
+    tabs:['Makyaj','Saç','Ayakkabı','Çanta','Takı'],
+    trendler:[
+      {label:'Düğün · Kırmızı Abiye',desc:'Klasik & görkemli'},
+      {label:'Gece · Siyah Mini',desc:'Dramatik & sofistike'},
+      {label:'Yemek · Pudra Elbise',desc:'Feminen & zarif'},
+      {label:'Günlük · Mavi Jean',desc:'Casual & şık'},
+    ],
+  },
+  en: {
+    heroEyebrow:'Occasion · Color · Harmony · Complete Style',
+    heroTitle:'Style guide<br><em>for every occasion</em>',
+    heroSub:'Choose your occasion and outfit color — get your complete style.',
+    s1:'Step 1 / 4', t1:'Where are you going?',
+    s2:'Step 2 / 4', t2:'What are you wearing?',
+    s3:'Step 3 / 4', t3:'What color is your outfit?',
+    s4:'Step 4 / 4', t4:'What is your skin tone?',
+    cta:'Create My Style ✨',
+    trend:'Quick Combos',
+    footer:'© 2025 STARSTIL — Follow trends, discover your style 💕',
+    ortamlar:[
+      {ad:'Wedding / Engagement',desc:'Formal events'},
+      {ad:'Special Dinner',desc:'Invitation, restaurant'},
+      {ad:'Work / Office',desc:'Professional setting'},
+      {ad:'Casual / Street',desc:'Shopping, hangout'},
+      {ad:'Night / Party',desc:'Club, entertainment'},
+      {ad:'Picnic / Nature',desc:'Outdoor activities'},
+    ],
+    kiyafetler:{
+      dugun:[{ad:'Gown'},{ad:'Cocktail'},{ad:'Suit'}],
+      yemek:[{ad:'Dress'},{ad:'Blouse & Pants'},{ad:'Skirt & Top'}],
+      ofis:[{ad:'Suit'},{ad:'Blouse & Pants'},{ad:'Skirt & Blazer'}],
+      gunluk:[{ad:'Jeans & Top'},{ad:'Casual Dress'},{ad:'Sporty / Comfy'}],
+      gece:[{ad:'Mini Dress'},{ad:'Evening Dress'},{ad:'Leather Look'}],
+      piknik:[{ad:'Summer Dress'},{ad:'Jeans & Tee'},{ad:'Shorts & Top'}],
+    },
+    renkler:['Red','Burgundy','Pink','Blush','Orange','Yellow','Green','Mint','Blue','Navy','Purple','Lilac','White','Cream','Black'],
+    tenler:['Fair Skin','Medium Skin','Tan Skin','Deep Skin'],
+    tenDesc:['Pink or yellow undertone','Olive or wheat tone','Dark bronze or brown','Deep brown tone'],
+    tabs:['Makeup','Hair','Shoes','Bag','Jewelry'],
+    trendler:[
+      {label:'Wedding · Red Gown',desc:'Classic & glamorous'},
+      {label:'Night · Black Mini',desc:'Dramatic & sophisticated'},
+      {label:'Dinner · Blush Dress',desc:'Feminine & elegant'},
+      {label:'Casual · Blue Jeans',desc:'Casual & chic'},
+    ],
+  }
+};
+
+function setLang(lang, btn){
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const t = LANG[lang];
+
+  // Hero
+  document.querySelector('.hero-eyebrow').textContent = t.heroEyebrow;
+  document.querySelector('.hero-title').innerHTML = t.heroTitle;
+  document.querySelector('.hero-sub').textContent = t.heroSub;
+
+  // Adım etiketleri
+  const stepLabels = document.querySelectorAll('.step-label');
+  const stepTitles = document.querySelectorAll('.step-title');
+  if(stepLabels[0]) stepLabels[0].textContent = t.s1;
+  if(stepTitles[0]) stepTitles[0].textContent = t.t1;
+  if(stepLabels[1]) stepLabels[1].textContent = t.s2;
+  if(stepLabels[2]) stepLabels[2].textContent = t.s3;
+  if(stepTitles[2]) stepTitles[2].textContent = t.t3;
+  if(stepLabels[3]) stepLabels[3].textContent = t.s4;
+  if(stepTitles[3]) stepTitles[3].textContent = t.t4;
+  // Kıyafet başlığı direkt ID ile
+  const kTitle = document.getElementById('kiyafetTitle');
+  if(kTitle) kTitle.textContent = t.t2;
+
+  // CTA
+  document.getElementById('ctaBtn').textContent = t.cta;
+
+  // Ortam butonları
+  const ortamBtns = document.querySelectorAll('.ortam-btn');
+  ortamBtns.forEach((btn2, i) => {
+    if(t.ortamlar[i]){
+      btn2.querySelector('.ortam-ad').textContent = t.ortamlar[i].ad;
+      btn2.querySelector('.ortam-desc').textContent = t.ortamlar[i].desc;
+    }
+  });
+
+  // Kıyafet wrap başlığı ve butonları güncelle
+  const kWrap = document.getElementById('kiyafetWrap');
+  if(kWrap && kWrap.style.display !== 'none'){
+    const kLabels = kWrap.querySelectorAll('.step-label');
+    const kTitles = kWrap.querySelectorAll('.step-title');
+    if(kLabels[0]) kLabels[0].textContent = t.s2;
+    if(kTitles[0]) kTitles[0].textContent = t.t2;
+    if(secilenOrtam){
+      const kiyafetBtns = document.querySelectorAll('.kiyafet-btn');
+      const kiyafetData = t.kiyafetler[secilenOrtam];
+      if(kiyafetData) kiyafetBtns.forEach((btn2,i)=>{ if(kiyafetData[i]) btn2.querySelector('.kiyafet-ad').textContent = kiyafetData[i].ad; });
+    }
+  }
+
+  // Renk adları - tüm renk kartlarını güncelle
+  const renkAdlar = document.querySelectorAll('.renk-ad');
+  renkAdlar.forEach((el,i)=>{ if(t.renkler[i]) el.textContent = t.renkler[i]; });
+
+  // Kıyafet adlarını da güncelle
+  if(secilenOrtam && t.kiyafetler[secilenOrtam]){
+    const kiyafetBtns2 = document.querySelectorAll('.kiyafet-btn .kiyafet-ad');
+    kiyafetBtns2.forEach((el,i)=>{ if(t.kiyafetler[secilenOrtam][i]) el.textContent = t.kiyafetler[secilenOrtam][i].ad; });
+  }
+
+  // Ten butonları
+  const tenBtns = document.querySelectorAll('.ten-btn');
+  tenBtns.forEach((btn2,i)=>{
+    btn2.querySelector('.ten-name').textContent = t.tenler[i];
+    btn2.querySelector('.ten-desc').textContent = t.tenDesc[i];
+  });
+
+  // Sekmeler
+  const tabBtns = document.querySelectorAll('.rtab');
+  const tabIcons = ['💄','💇‍♀️','👠','👜','💍'];
+  tabBtns.forEach((btn2,i)=>{ btn2.innerHTML = `<span class="ti">${tabIcons[i]}</span>${t.tabs[i]}`; });
+
+  // Trend
+  document.querySelector('.divider').textContent = t.trend;
+  const trendKartlar = document.querySelectorAll('.trend-info');
+  trendKartlar.forEach((el,i)=>{
+    if(t.trendler[i]){
+      el.querySelector('.trend-name').textContent = t.trendler[i].label;
+      el.querySelector('.trend-desc').textContent = t.trendler[i].desc;
+    }
+  });
+
+  // Footer
+  document.querySelector('footer').textContent = t.footer;
+}
+</script>
+</body>
+</html>
