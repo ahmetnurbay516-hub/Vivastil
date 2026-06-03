@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVASTIL — Rengine Göre Komple Stil</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdf5f7;
+  --white: #ffffff;
+  --text: #1a0a10;
+  --muted: #8a5060;
+  --border: #f0c0cc;
+  --rose: #d4496a;
+  --rose-pale: #fde8ee;
+  --blush: #fce8f0;
+  --gold: #c8963c;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #1a0510 0%, #2d0a1a 100%);
+  padding: 1.1rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:700; color:#fff; letter-spacing:1px; }
+.logo em { color:#f0a0b8; font-style:italic; }
+.lang-toggle { display:flex; gap:0.3rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:999px; padding:0.25rem 0.6rem; }
+.lang-btn { font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.5); background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; padding:0.1rem 0.3rem; border-radius:999px; transition:all 0.2s; }
+.lang-btn.active { color:#fff; background:rgba(255,255,255,0.15); }
+
+/* HERO */
+.hero {
+  background: linear-gradient(160deg, #1a0510 0%, #3d1020 50%, #6b1a35 100%);
+  padding: 3rem 1.5rem 4rem; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(240,160,184,0.15), transparent 60%);
+}
+.hero-petals {
+  position:absolute; inset:0; pointer-events:none;
+}
+.petal {
+  position:absolute; font-size:1.2rem; opacity:0.15;
+  animation: float linear infinite;
+}
+@keyframes float {
+  0% { transform: translateY(100vh) rotate(0deg); opacity:0; }
+  10% { opacity:0.15; }
+  90% { opacity:0.15; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity:0; }
+}
+.hero-eyebrow { font-size:0.68rem; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(240,160,184,0.8); margin-bottom:1rem; position:relative; }
+.hero-title { font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:700; color:#fff; line-height:1.1; margin-bottom:0.75rem; position:relative; }
+.hero-title em { font-style:italic; color:#f0a0b8; }
+.hero-sub { color:rgba(255,255,255,0.6); font-size:0.9rem; font-weight:300; max-width:300px; margin:0 auto 2.5rem; line-height:1.7; position:relative; }
+
+/* ADIM LABEL */
+.step-section { padding: 2rem 1.2rem; max-width:600px; margin:0 auto; }
+.step-label { font-size:0.65rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--rose); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem; }
+.step-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.step-title { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; margin-bottom:1.5rem; color:var(--text); }
+
+/* ELBİSE GRID */
+.elbise-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.elbise-kart {
+  cursor: pointer;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2.5px solid transparent;
+  transition: all 0.3s cubic-bezier(.22,1,.36,1);
+  position: relative;
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.elbise-kart:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.elbise-kart.selected { border-color: var(--text); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+.elbise-kart.selected::after {
+  content: '✓';
+  position: absolute; top: 0.4rem; right: 0.4rem;
+  width: 20px; height: 20px;
+  background: var(--text); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 900;
+  animation: popIn 0.2s cubic-bezier(.22,1,.36,1);
+  z-index: 2;
+}
+@keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+
+/* CSS ELBİSE */
+.elbise-visual {
+  height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  padding: 8px;
+}
+
+.dress-svg {
+  width: 60px; height: 90px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  transition: transform 0.3s;
+}
+.elbise-kart:hover .dress-svg { transform: scale(1.05); }
+
+.elbise-ad {
+  padding: 0.5rem 0.6rem 0.7rem;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+/* TEN RENGİ */
+.ten-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; margin-bottom:2rem; }
+.ten-btn {
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.ten-btn:hover { border-color: var(--rose); background: var(--rose-pale); }
+.ten-btn.selected { border-color: var(--rose); background: var(--rose-pale); }
+.ten-circle {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid rgba(0,0,0,0.1);
+}
+.ten-info {}
+.ten-name { font-size:0.85rem; font-weight:600; color:var(--text); }
+.ten-desc { font-size:0.68rem; color:var(--muted); margin-top:0.1rem; }
+
+/* CTA */
+.cta-btn {
+  width: 100%;
+  padding: 1.1rem;
+  background: linear-gradient(135deg, #1a0510, #3d1020);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-style: italic;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(26,5,16,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.cta-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(240,160,184,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cta-btn:hover::before { opacity: 1; }
+.cta-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(26,5,16,0.4); }
+.cta-btn:disabled { background: var(--border); color: var(--muted); cursor:not-allowed; box-shadow:none; transform:none; }
+
+/* SONUÇ */
+.result-card {
+  display: none;
+  margin-bottom: 2rem;
+  animation: slideUp 0.5s cubic-bezier(.22,1,.36,1);
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.result-card.show { display: block; }
+
+.result-header {
+  background: linear-gradient(135deg, #1a0510, #3d1020);
+  border-radius: 20px 20px 0 0;
+  padding: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  position: relative; overflow: hidden;
+}
+.result-header::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(240,160,184,0.15), transparent 60%);
+}
+.result-dress-preview {
+  width: 60px; height: 80px; flex-shrink: 0; position: relative;
+}
+.result-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:#fff; }
+.result-sub { font-size:0.75rem; color:rgba(240,160,184,0.8); margin-top:0.2rem; }
+
+/* TABS */
+/* result-tabs defined below */
+.result-tabs {
+  display: grid; grid-template-columns: repeat(5,1fr);
+  background: var(--white); border-bottom: none;
+  padding: 0.75rem 0.6rem; gap: 0.4rem;
+}
+.rtab {
+  padding: 0.65rem 0.2rem; font-size:0.65rem; font-weight:700;
+  color: var(--muted); background: var(--bg); border:1.5px solid var(--border);
+  cursor:pointer; text-align:center; border-radius:12px;
+  transition:all 0.2s; font-family:'DM Sans',sans-serif; line-height:1.3;
+}
+.rtab .tab-icon { font-size:1.3rem; display:block; margin-bottom:0.3rem; }
+.rtab:hover { border-color:var(--rose); color:var(--rose); background:var(--rose-pale); }
+.rtab.active { 
+  color:#fff; background:var(--rose); border-color:var(--rose);
+  box-shadow: 0 4px 12px rgba(212,73,106,0.3);
+  transform: translateY(-1px);
+}
+
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* STIL İÇERİK */
+.stil-body { background:var(--white); border-radius:0 0 20px 20px; padding:1.5rem; }
+
+/* MAKYAJ ADIM */
+.makyaj-adim {
+  background: var(--bg);
+  border-radius: 14px;
+  padding: 1.2rem;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--rose);
+  position: relative;
+  animation: fadeIn 0.3s ease both;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+
+.adim-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem; }
+.adim-renk {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink:0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border: 2px solid white;
+}
+.adim-num {
+  width: 22px; height: 22px;
+  background: var(--rose); color: #fff;
+  border-radius: 50%; display:flex; align-items:center; justify-content:center;
+  font-size:0.68rem; font-weight:700; flex-shrink:0; margin-left:auto;
+}
+.adim-baslik { font-weight:700; font-size:0.9rem; color:var(--text); }
+.adim-aciklama { font-size:0.82rem; color:#3a2030; line-height:1.75; font-weight:400; }
+.adim-ipucu { font-size:0.75rem; color:var(--rose); font-weight:600; margin-top:0.5rem; display:flex; align-items:flex-start; gap:0.3rem; }
+
+/* SAÇ KART */
+.sac-kart {
+  background: var(--bg); border-radius:14px; padding:1.2rem; margin-bottom:0.75rem;
+  border-left: 3px solid #c8963c;
+}
+.sac-kart-baslik { font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#c8963c; margin-bottom:0.3rem; }
+.sac-kart-ad { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--text); margin-bottom:0.5rem; }
+.sac-kart-aciklama { font-size:0.82rem; color:#3a2030; line-height:1.75; }
+.sac-kart-alt { font-size:0.75rem; color:var(--muted); margin-top:0.5rem; font-style:italic; }
+.renk-chips { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.75rem; }
+.renk-chip { display:flex; align-items:center; gap:0.3rem; padding:0.25rem 0.6rem; border-radius:999px; background:var(--white); border:1px solid var(--border); font-size:0.7rem; font-weight:600; }
+.renk-nokta { width:12px; height:12px; border-radius:50%; border:1px solid rgba(0,0,0,0.1); }
+
+/* AKSESUAR KART */
+.aksesuar-kart {
+  background: var(--bg); border-radius:14px; padding:1.2rem; margin-bottom:0.75rem;
+}
+.aksesuar-icon { font-size:2rem; margin-bottom:0.5rem; }
+.aksesuar-baslik { font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; }
+.aksesuar-ad { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--text); margin-bottom:0.5rem; }
+.aksesuar-aciklama { font-size:0.82rem; color:#3a2030; line-height:1.75; }
+.aksesuar-alt { font-size:0.75rem; color:var(--muted); font-style:italic; margin-top:0.4rem; }
+
+/* STİLİST NOTU */
+.stilist-notu {
+  background: linear-gradient(135deg, var(--rose-pale), var(--blush));
+  border-radius: 14px; padding: 1.2rem; margin-top:0.5rem;
+  border: 1px solid var(--border);
+}
+.stilist-notu-label { font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--rose); margin-bottom:0.4rem; }
+.stilist-notu-text { font-family:'Cormorant Garamond',serif; font-size:1rem; font-style:italic; color:var(--text); line-height:1.7; }
+
+/* TREND KOMBİNLER */
+.trend-baslik { font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); text-align:center; margin:2rem 0 1rem; display:flex; align-items:center; gap:0.75rem; }
+.trend-baslik::before, .trend-baslik::after { content:''; flex:1; height:1px; background:var(--border); }
+.trend-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:3rem; }
+.trend-kart {
+  background: var(--white); border-radius:16px; border:1.5px solid var(--border);
+  overflow:hidden; cursor:pointer; transition:all 0.2s;
+}
+.trend-kart:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(212,73,106,0.12); border-color:var(--rose); }
+.trend-dress { height:100px; display:flex; align-items:center; justify-content:center; }
+.trend-info { padding:0.75rem; }
+.trend-name { font-size:0.85rem; font-weight:700; color:var(--text); }
+.trend-desc { font-size:0.7rem; color:var(--muted); margin-top:0.15rem; }
+
+footer { text-align:center; padding:2rem 1.5rem; color:var(--muted); font-size:0.75rem; border-top:1px solid var(--border); background:var(--white); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">VIVA<em>STİL</em></div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('tr',this)">TR</button>
+    <span style="color:rgba(255,255,255,0.2);font-size:0.7rem">|</span>
+    <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-petals" id="petals"></div>
+  <div class="hero-eyebrow">Renk · Uyum · Güzellik · Stil</div>
+  <h1 class="hero-title">Rengine göre<br><em>komple stil rehberin</em></h1>
+  <p class="hero-sub">Elbisenin rengini seç — makyaj, saç, ayakkabı, çanta ve takıya kadar her şeyi öğren.</p>
+</div>
+
+<div class="step-section">
+
+  <!-- ADIM 1 -->
+  <div class="step-label">Adım 1 / 2</div>
+  <div class="step-title">Elbise rengini seç</div>
+  <div class="elbise-grid" id="elbiseGrid"></div>
+
+  <!-- ADIM 2 -->
+  <div class="step-label">Adım 2 / 2</div>
+  <div class="step-title">Ten rengin hangisine yakın?</div>
+  <div class="ten-grid">
+    <button class="ten-btn" onclick="secTen('açık',this)">
+      <div class="ten-circle" style="background:linear-gradient(135deg,#fde8d8,#f5c8a8)"></div>
+      <div class="ten-info"><div class="ten-name">Açık Ten</div><div class="ten-desc">Pembe veya sarı alt ton</div></div>
+    </button>
+    <button class="ten-btn" onclick="secTen('orta',this)">
+      <div class="ten-circle" style="background:linear-gradient(135deg,#d4a878,#c08850)"></div>
+      <div class="ten-info"><div class="ten-name">Orta Ten</div><div class="ten-desc">Zeytin veya buğday tonu</div></div>
+    </button>
+    <button class="ten-btn" onclick="secTen('esmer',this)">
+      <div class="ten-circle" style="background:linear-gradient(135deg,#a06838,#885028)"></div>
+      <div class="ten-info"><div class="ten-name">Esmer Ten</div><div class="ten-desc">Koyu bronz veya kahve</div></div>
+    </button>
+    <button class="ten-btn" onclick="secTen('koyu',this)">
+      <div class="ten-circle" style="background:linear-gradient(135deg,#5a3018,#3a1808)"></div>
+      <div class="ten-info"><div class="ten-name">Koyu Ten</div><div class="ten-desc">Derin kahve tonu</div></div>
+    </button>
+  </div>
+
+  <button class="cta-btn" id="ctaBtn" onclick="gosterSonuc()" disabled>Stilimi Oluştur ✨</button>
+
+  <!-- SONUÇ -->
+  <div class="result-card" id="resultCard">
+    <div class="result-header">
+      <div class="result-dress-preview" id="resultDressPreview"></div>
+      <div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-sub" id="resultSub"></div>
+      </div>
+    </div>
+    <div class="result-tabs">
+      <button class="rtab active" onclick="switchTab('makyaj',this)"><span class="tab-icon">💄</span>Makyaj</button>
+      <button class="rtab" onclick="switchTab('sac',this)"><span class="tab-icon">💇‍♀️</span>Saç</button>
+      <button class="rtab" onclick="switchTab('ayakkabi',this)"><span class="tab-icon">👠</span>Ayakkabı</button>
+      <button class="rtab" onclick="switchTab('canta',this)"><span class="tab-icon">👜</span>Çanta</button>
+      <button class="rtab" onclick="switchTab('taki',this)"><span class="tab-icon">💍</span>Takı</button>
+    </div>
+    <div class="stil-body">
+      <div class="tab-content active" id="tab-makyaj"></div>
+      <div class="tab-content" id="tab-sac"></div>
+      <div class="tab-content" id="tab-ayakkabi"></div>
+      <div class="tab-content" id="tab-canta"></div>
+      <div class="tab-content" id="tab-taki"></div>
+    </div>
+  </div>
+
+  <div class="trend-baslik">Hızlı Kombinler</div>
+  <div class="trend-grid" id="trendGrid"></div>
+
+</div>
+
+<footer>© 2025 VIVASTIL — Trendleri takip et, stilini keşfet 💕</footer>
+
+<script>
+// Yaprak animasyonu
+const petalEl = document.getElementById('petals');
+for(let i=0;i<12;i++){
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.textContent = ['🌸','✿','❀','🌺','💮'][Math.floor(Math.random()*5)];
+  p.style.left = Math.random()*100+'%';
+  p.style.animationDuration = (8+Math.random()*12)+'s';
+  p.style.animationDelay = (Math.random()*10)+'s';
+  p.style.fontSize = (0.8+Math.random()*0.8)+'rem';
+  petalEl.appendChild(p);
+}
+
+// Renkler ve elbise SVG'leri
+const RENKLER = [
+  {id:'kirmizi', ad:'Kırmızı', hex:'#c0392b', tip:'solid'},
+  {id:'bordo', ad:'Bordo', hex:'#7b1c2e', tip:'solid'},
+  {id:'pembe', ad:'Pembe', hex:'#e07aab', tip:'solid'},
+  {id:'pudra', ad:'Pudra', hex:'#f0c4d4', tip:'soft'},
+  {id:'turuncu', ad:'Turuncu', hex:'#e07840', tip:'solid'},
+  {id:'sari', ad:'Sarı', hex:'#e8c840', tip:'solid'},
+  {id:'yesil', ad:'Yeşil', hex:'#2e8c5c', tip:'solid'},
+  {id:'mint', ad:'Mint', hex:'#5dcfb0', tip:'soft'},
+  {id:'mavi', ad:'Mavi', hex:'#2a7cc0', tip:'solid'},
+  {id:'lacivert', ad:'Lacivert', hex:'#1a2e5a', tip:'dark'},
+  {id:'mor', ad:'Mor', hex:'#7c4ca0', tip:'solid'},
+  {id:'lila', ad:'Lila', hex:'#c0a0e0', tip:'soft'},
+  {id:'beyaz', ad:'Beyaz', hex:'#f5f0eb', tip:'light'},
+  {id:'krem', ad:'Krem', hex:'#e8d8b8', tip:'soft'},
+  {id:'siyah', ad:'Siyah', hex:'#1a1a1a', tip:'dark'},
+];
+
+function dressSVG(hex, tip){
+  const shadow = tip==='dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)';
+  const highlight = tip==='dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.4)';
+  const stroke = tip==='light' ? '#ddd' : 'none';
+  return `<svg class="dress-svg" viewBox="0 0 60 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dg${hex.replace('#','')}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${hex}" stop-opacity="1"/>
+        <stop offset="100%" stop-color="${hex}" stop-opacity="0.75"/>
+      </linearGradient>
+      <linearGradient id="sh${hex.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${highlight}"/>
+        <stop offset="100%" stop-color="${shadow}"/>
+      </linearGradient>
+    </defs>
+    <!-- Omuzlar -->
+    <path d="M18 8 Q20 4 30 3 Q40 4 42 8 L46 20 Q40 16 30 15 Q20 16 14 20 Z" fill="url(#dg${hex.replace('#','')})" stroke="${stroke}" stroke-width="0.5"/>
+    <!-- Üst kısım -->
+    <path d="M14 20 Q20 16 30 15 Q40 16 46 20 L44 38 Q38 34 30 33 Q22 34 16 38 Z" fill="url(#dg${hex.replace('#','')})" stroke="${stroke}" stroke-width="0.5"/>
+    <!-- Etek -->
+    <path d="M16 38 Q22 34 30 33 Q38 34 44 38 L52 82 Q42 86 30 87 Q18 86 8 82 Z" fill="url(#dg${hex.replace('#','')})" stroke="${stroke}" stroke-width="0.5"/>
+    <!-- Parlaklık -->
+    <path d="M18 8 Q22 5 30 4 L30 87 Q22 86 14 82 Z" fill="url(#sh${hex.replace('#','')})" opacity="0.5"/>
+    <!-- Bel çizgisi -->
+    <ellipse cx="30" cy="37" rx="14" ry="2" fill="${shadow}" opacity="0.3"/>
+    <!-- Yaka detayı -->
+    <path d="M24 8 Q30 12 36 8" stroke="rgba(255,255,255,0.3)" stroke-width="0.8" fill="none"/>
+  </svg>`;
+}
+
+// Grid oluştur
+const grid = document.getElementById('elbiseGrid');
+RENKLER.forEach(r => {
+  const kart = document.createElement('div');
+  kart.className = 'elbise-kart';
+  kart.innerHTML = `<div class="elbise-visual">${dressSVG(r.hex, r.tip)}</div><div class="elbise-ad">${r.ad}</div>`;
+  kart.onclick = () => secRenk(r.id, kart);
+  grid.appendChild(kart);
+});
+
+// Trend kombinler
+const TRENDLER = [
+  {renkId:'kirmizi', ten:'orta', bg:'linear-gradient(135deg,#c0392b,#e05060)', label:'Kırmızı', desc:'Klasik & çarpıcı'},
+  {renkId:'siyah', ten:'açık', bg:'linear-gradient(135deg,#1a1a1a,#3a2a3a)', label:'Siyah', desc:'Dramatik & sofistike'},
+  {renkId:'pudra', ten:'açık', bg:'linear-gradient(135deg,#f0c4d4,#fde8f0)', label:'Pudra Pembe', desc:'Feminen & tatlı'},
+  {renkId:'lacivert', ten:'esmer', bg:'linear-gradient(135deg,#1a2e5a,#2a4a8a)', label:'Lacivert', desc:'Zarif & klasik'},
+];
+const trendGrid = document.getElementById('trendGrid');
+TRENDLER.forEach(t => {
+  const r = RENKLER.find(x=>x.id===t.renkId);
+  const kart = document.createElement('div');
+  kart.className = 'trend-kart';
+  kart.innerHTML = `<div class="trend-dress" style="background:${t.bg}">${dressSVG(r.hex, r.tip)}</div><div class="trend-info"><div class="trend-name">${t.label} Elbise</div><div class="trend-desc">${t.desc}</div></div>`;
+  kart.onclick = () => hizliSec(t.renkId, t.ten);
+  trendGrid.appendChild(kart);
+});
+
+let secilenRenk = null, secilenTen = null;
+
+function secRenk(id, el){
+  document.querySelectorAll('.elbise-kart').forEach(k=>k.classList.remove('selected'));
+  el.classList.add('selected');
+  secilenRenk = id;
+  checkReady();
+}
+
+function secTen(ten, btn){
+  document.querySelectorAll('.ten-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  secilenTen = ten;
+  checkReady();
+}
+
+function checkReady(){ document.getElementById('ctaBtn').disabled = !(secilenRenk && secilenTen); }
+
+function switchTab(tab, btn){
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+// STİL VERİTABANI
+const STIL = {
+  kirmizi: {
+    açık: {
+      renkAdi:'Kırmızı',
+      makyaj: {
+        adimlar: [
+          {num:1, baslik:'Cilt Hazırlığı & Fondöten', renk:'#f5e0d8', aciklama:'Kırmızı elbisenin yanında ten parlak, canlı ve pürüzsüz görünmeli. Önce nemlendiricinizi uygulayın ve 2 dakika bekleyin. Ardından ışıltı veren bir primer sürün — bu makyajın tüm gün taze kalmasını sağlar. Hafif örtücü, sarı alt tonlu bir fondöten seçin ve parmak uçlarıyla ya da süngerle ince ince yedirin. Göz altı morlukları için pembe ton düzelticili bir kapatıcı kullanın. Pudra ile T bölgesini hafifçe sabitleyin.', ipucu:'Çok örtücü fondöten bu lookta ağır ve yapay görünür. İnce kat şeffaf görünüm sağlar.'},
+          {num:2, baslik:'Göz Farı — Champagne & Nude', renk:'#c8a090', aciklama:'Kırmızı elbiseyle gözler minimal tutulmalı — odak noktası dudaklarınız. Tüm göz kapağına champagne veya nude renkli göz farı uygulayın. Çukur kısmına çok açık kahverengi ya da taupe far ekleyerek hafif derinlik yaratın. İç köşeye ışıltılı beyaz veya pembe-şampanya far koyun — bu gözleri açık ve dinç gösterir. Altın shimmer kapağa parlak bir etki katar.', ipucu:'Blending fırçasıyla farları birbirine iyice yedirin. Keskin sınırlar bu lookta çok sert görünür.'},
+          {num:3, baslik:'Eyeliner & Maskara', renk:'#2a1010', aciklama:'Kirpik diplerinden başlayarak üst kirpik diplerine ince, doğal bir siyah eyeliner çizgisi çekin. Dramatik bir çizgiye gerek yok — kirpik diplerini doldurmak yeterli. Kirpik kıvırıcı kullandıktan sonra siyah maskara uygulayın, 2 kat yapın. Alt kirpiklere maskara sürmeyin — sade ve temiz bir göz makyajı kırmızı elbiseyle daha şık görünür.', ipucu:'Kirpik kıvırıcı kullandıktan hemen sonra maskara sürmek en uzun kıvrımı verir.'},
+          {num:4, baslik:'Allık — Baby Blush & Highlight', renk:'#f0b8b0', aciklama:'Yanaklarınızın elma bölgesini bulmak için gülümseyin — allığı tam o yüksek noktaya uygulayın. Baby blush ya da soft peach tonlu allık açık ten üzerinde çok doğal görünür. Fan fırçayla az miktarda alın ve şakaklarınıza doğru hafifçe süpürün. Elmacık kemiklerinizin üst kısmına ışıltılı bir highlighter ekleyin — bu kırmızı elbisaenin enerjisiyle harika uyum sağlar.', ipucu:'Allığı az uygulayıp artırmak, fazla uygulayıp düzeltmeye çalışmaktan çok daha kolay.'},
+          {num:5, baslik:'Ruj — Soft Coral Nude', renk:'#d4908c', aciklama:'Kırmızı elbiseyle çarpışmayan, dengeleyen bir ruj tonu seçin. Soft coral nude ya da berry nude mükemmel tercih. Önce dudak kalemiyle tam dudak sınırını belirleyin — bu rujen daha uzun kalmasını sağlar ve dudaklara dolgunluk verir. Ruju ortadan başlayarak dışa doğru uygulayın. İlk katı dokuyla hafifçe alın, ardından ikinci kat sürerek kalıcılığı artırın. Saten ya da mat bitiş tercih edin.', ipucu:'Nude ruj dişleri görsel olarak daha beyaz gösterir — bu kırmızı elbiseyle harika bir kombinasyon.'},
+        ],
+        stilipucu:'Kırmızı elbiseyle nude makyaj birbirini mükemmel dengeler. Gözü minimal, dudağı soft tutun — elbise zaten tüm dikkati çekiyor. Saçınızı toplu yaparsanız boyun ve dekolte hattınız öne çıkar, küpe takmayı unutmayın.'
+      },
+      sac: {
+        model:{emoji:'💆‍♀️', ad:'Düşük Topuz veya Dalgalı Yarım Açık', aciklama:'Kırmızı elbisenin enerjisini dengelemek için en iyi seç zarif bir düşük topuz ya da dalgalı yarım açık saçtır. Düşük topuz boyun ve dekolte hattını açık bırakır — küpe ve takılarınızın görünmesini sağlar. Dalgalı yarım açık saç ise daha romantik ve feminen bir his verir. Her iki stilde de birkaç tel saçı yüzünüzün yanına bırakın — bu sert bir görünümü yumuşatır.', alt:'Alternatif: Omuzlara dökülen düz ve parlak saç da çok zarif görünür.'},
+        renk:{emoji:'🎨', ad:'Soğuk veya Nötr Tonlar', aciklama:'Açık ten ve kırmızı elbise kombinasyonu için en uygun saç renkleri doğal sarışın, bal sarısı, açık kestane veya kül kahvesidir. Bu tonlar kırmızıyla çatışmadan uyumlu bir bütünlük oluşturur. Eğer koyu renk saçınız varsa endişelenmeyin — koyu kestane ya da siyah saç kırmızı elbiseyle çok dramatik ve etkileyici görünür.', swatches:[{renk:'#e8d080',ad:'Sarışın'},{renk:'#c0a060',ad:'Bal'},{renk:'#8a5028',ad:'Kestane'},{renk:'#2a1a10',ad:'Koyu Kahve'}]},
+        ipucu:'Saç aksesuarı olarak ince altın renkli toka ya da bağ çok şık bir dokunuş katar. Saçınıza serum sürerek parlaklık ekleyin — parlak saç kırmızıyla çok iyi gider.'
+      },
+      ayakkabi:{emoji:'👠', ad:'Nude veya Ten Rengi Topuklu', aciklama:'Kırmızı elbisenin yanında en şık seçim nude rengi topuklu iskarpindir. Nude ayakkabı bacakları görsel olarak uzatır ve kırmızıyla çatışmaz — tüm dikkati elbisenize yönlendirir. Altın metalik sandalet de çok iyi bir alternatif — sıcak metal tonları kırmızıyla harika uyum sağlar. Topuk yüksekliği en az 5-6 cm olursa kırmızı elbisenin dökümlenmesi çok daha güzel görünür.', alt:'Siyah topuklu da güçlü ve klasik bir kontrast yaratır ama nude kadar zarif değil.', swatches:[{renk:'#e8c8a0',ad:'Nude'},{renk:'#c8a060',ad:'Altın'},{renk:'#1a1a1a',ad:'Siyah'}]},
+      canta:{emoji:'👜', ad:'Küçük Altın veya Nude Clutch', aciklama:'Kırmızı elbisenin yanında çanta dikkat dağıtmamalı — elbise yıldız olsun. Küçük bir altın clutch ya da nude zarf çanta en doğru tercih. Altın rengi kırmızıyla sıcak ve lüks bir kombinasyon oluşturur. Çantanın boyutu küçük olsun — büyük çanta elbisenin etkisini azaltır. İçine yalnızca zorunlu eşyalarınızı koyun: telefon, kart, ruj.', alt:'Beyaz veya krem clutch de ferah ve koordineli bir görünüm sağlar.', swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#e8c8a0',ad:'Nude'},{renk:'#ffffff',ad:'Beyaz'}]},
+      taki:{emoji:'💍', ad:'İnce Altın Takılar', aciklama:'Kırmızı elbise güçlü bir parça olduğu için takılar sade ve zarif olmalı. İnce altın zincir kolye ya da tek taşlı küpe yeterli. Kural şu: ya küpe ya kolye — ikisini birden taktığınızda elbiseyle yarışmaya başlarlar. Altın ton kırmızıyla sıcak ve koordineli görünür. Büyük statement takılardan kaçının — elbise zaten konuşuyor.', alt:'İnce gümüş de çalışır ama altın daha sıcak ve uyumlu görünür.', swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#d0d0d0',ad:'Gümüş'}]},
+    },
+    orta: {
+      renkAdi:'Kırmızı',
+      makyaj:{adimlar:[{num:1,baslik:'Warm Fondöten',renk:'#e8c8a0',aciklama:'Orta ten için sarı alt tonlu, warm bir fondöten seçin. Bu tonlar kırmızı elbiseyle sıcak ve koordineli görünür. Bronzer ekleyerek yüzünüze sıcaklık katın — kırmızı elbise güçlü bir renk, tenin de güçlü görünmesi gerekir. T bölgesini pudrayla sabitleyin.',ipucu:'Sarı alt tonlu fondöten kırmızıyla en iyi uyumu sağlar.'},{num:2,baslik:'Warm Taupe Göz Farı',renk:'#8a5040',aciklama:'Warm taupe ve nude tonlu göz farları orta ten üzerinde çok doğal görünür. Kapağa nude, çukura warm kahverengi, iç köşeye ışıltılı ton uygulayın. Hafif smoky ama temiz bir göz — kırmızı elbiseyle dramatik ama ağır değil.',ipucu:'Kahverengi eyeliner siyahtan daha yumuşak bir çerçeve oluşturur.'},{num:3,baslik:'Cat Eye Eyeliner',renk:'#2a1010',aciklama:'Kahverengi eyeliner ile kirpik diplerine ince bir çizgi çekin ve dış köşeyi hafifçe uzatın. Cat eye efekti kırmızı elbisenin gücünü tamamlar — feminen ve güçlü bir his verir. İki kat maskara ile bitirin.',ipucu:'Eyeliner kalemi yerine likit eyeliner daha keskin sonuç verir.'},{num:4,baslik:'Peach Glow Allık',renk:'#d08070',aciklama:'Şeftali tonlu allık orta ten üzerinde çok canlı ve sıcak görünür. Yanakların elma bölgesine yoğunca uygulayın, şakak hattına blendleyin. Bronzer ile birlikte kullanırsanız yüzünüz güneşte bronzlaşmış gibi görünür.',ipucu:'Contour eklemek istiyorsanız allığın hemen altına uygulayın.'},{num:5,baslik:'Klasik Kırmızı Ruj',renk:'#c04040',aciklama:'Orta ten üzerinde klasik kırmızı ruj mükemmel görünür. Dudak kalemiyle önce dudak sınırını net belirleyin. Ruju ortadan başlayarak dışa doğru uygulayın. İlk katı dokuyla alın, ikinci kat sürerek kalıcı hale getirin. Mat bitişli kırmızı gün boyu durur.',ipucu:'Dudak çevresine concealer sürmek rujtaşmasını önler ve dudakları daha net gösterir.'}],stilipucu:'Orta ten + kırmızı elbise çok güçlü bir kombinasyon. Klasik kırmızı ruj ve warm smoky göz bir arada çalışır çünkü ikisi de warm tonda. Saçınızı dalgalı bırakırsanız çok çarpıcı görünürsünüz.'},
+      sac:{model:{emoji:'🌊',ad:'Dalgalı Yarım Açık Saç',aciklama:'Orta ten ve kırmızı elbise için dalgalı, volümlü saç en doğru seçim. Saçı bir yana tarayın ya da omuzlardan aşağı serbest bırakın. Birkaç tel saçı yüz çevresinde bırakın — bu sert görünümü yumuşatır ve feminen bir his katar.',alt:'Alternatif: French twist ya da alçak at kuyruğu daha minimal bir look için ideal.'},renk:{emoji:'🎨',ad:'Koyu Kestane veya Siyah',aciklama:'Orta ten üzerinde koyu kestane, bakır tonu ya da siyah saç kırmızı elbiseyle çok dramatik uyum sağlar. Bu derin tonlar kırmızının enerjisiyle güçlü bir bütünlük oluşturur.',swatches:[{renk:'#5a2010',ad:'Koyu Kestane'},{renk:'#c06030',ad:'Bakır'},{renk:'#1a1010',ad:'Siyah'}]},ipucu:'Saça serum sürerek parlaklık ekleyin. Parlak saç bu kombinasyonda çok etkili.'},
+      ayakkabi:{emoji:'👠',ad:'Siyah veya Kırmızı Stiletto',aciklama:'Orta ten + kırmızı elbise kombinasyonu için siyah stiletto güçlü ve klasik bir kontrast yaratır. Cesur hissediyorsanız kırmızı stiletto ile monochromatic bir look yapın — çok etkileyici görünür. Nude de her zaman güvenli ve koordineli bir tercih.',alt:'Altın metalik sandalet de çok sıcak ve şık bir alternatif.',swatches:[{renk:'#1a1a1a',ad:'Siyah'},{renk:'#c0392b',ad:'Kırmızı'},{renk:'#e8c8a0',ad:'Nude'}]},
+      canta:{emoji:'👜',ad:'Siyah Mini Çanta veya Altın Clutch',aciklama:'Siyah mini çanta ya da altın clutch orta ten + kırmızı elbise kombinasyonuyla çok şık görünür. Siyah çanta elbisenin gücünü dengeler, altın ise sıcaklık katar. Boyut küçük olsun — büyük çanta odağı dağıtır.',alt:'Altın zincirli mini çanta da çok sofistike bir tercih.',swatches:[{renk:'#1a1a1a',ad:'Siyah'},{renk:'#c8a060',ad:'Altın'}]},
+      taki:{emoji:'💍',ad:'Altın veya Mercan Tonlı Takılar',aciklama:'Mercan, amber ya da altın renkli takılar orta ten + kırmızı elbise kombinasyonuna sıcaklık katar. Büyük küpe ya da katlı kolye tercih edin — ama ikisini birden takmayın. Bu ten metalik takıları çok iyi taşır.',alt:'Antik görünümlü altın takılar bu kombine çok yakışır.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#d04020',ad:'Mercan'}]},
+    },
+    esmer: {
+      renkAdi:'Kırmızı',
+      makyaj:{adimlar:[{num:1,baslik:'Tam Örtücü Fondöten',renk:'#c8a070',aciklama:'Esmer ten için warm undertoned, tam örtücü bir fondöten seçin. Boyun ve yüz arasında renk farkı olmadığından emin olun. Altın ışıltılı highlighter karıştırabilir ya da üstüne ayrıca uygulayabilirsiniz.',ipucu:'Bakır tonlu highlighter esmer ten üzerinde muhteşem parlar.'},{num:2,baslik:'Smoky Bronze Göz Farı',renk:'#604040',aciklama:'Bronze ve koyu kahve farlarla derin bir smoky göz yapın. Çukura en koyu tonu yoğunca uygulayın, kapağa metalik bronze ton koyun, iç köşeye ışıltılı gold ekleyin. Alt kirpik dibine de koyu far sürün — dramatik ama kontrollü bir etki elde edersiniz.',ipucu:'Blending en önemli adım — acele etmeden karıştırın.'},{num:3,baslik:'Kohl Eyeliner',renk:'#1a1010',aciklama:'Kohl kalem ile hem üst hem alt kirpik diplerini doldurun. Smudge efekti için parmağınızla hafifçe yedirin. Takma kirpik eklerseniz göz çok daha dramatik ve güçlü görünür.',ipucu:'Kohl kalem alt göze de uygulayın — smoky efekti tamamlar.'},{num:4,baslik:'Terra Cotta Allık',renk:'#c06050',aciklama:'Terra cotta allık esmer ten üzerinde toprak tonlu ve çok doğal görünür. Yanakların tamamına geniş bir fırçayla uygulayın, şakaklara blendleyin. Bronzer ile birlikte kullanırsanız çok warm ve sıcak bir görünüm elde edersiniz.',ipucu:'Bronzer ile allığı birlikte blendlemek en doğal sonucu verir.'},{num:5,baslik:'Deep Berry Ruj',renk:'#8a2020',aciklama:'Derin berry tonu esmer ten üzerinde çok güçlü ve çarpıcı görünür. Dudak kalemiyle önce konturlayın — net bir sınır önemli. Ruju dolu dolu uygulayın. Mat bitişli olsun ve fazlalığı dokuyla alın. Bu kombinasyon fotoğrafta inanılmaz görünür.',ipucu:'Dudak nemlendiricisi önceden sürün, mat ruj dudakları kurutabilir.'}],stilipucu:'Esmer ten kırmızıyı en güçlü taşıyan tendir. Smoky göz + deep berry ruj bir arada cesur ama doğru — ikisi de warm tonlarda. Altın takılar ve dalgalı saçla sahneye çıkın.'},
+      sac:{model:{emoji:'✨',ad:'Volümlü Dalgalar veya Afro Stili',aciklama:'Esmer ten + kırmızı elbise için volümlü, kabarık dalgalar ya da doğal afro stili muhteşem görünür. Saç ne kadar güçlüyse look o kadar çarpıcı olur. Yüksek at kuyruğu veya örgülü topuz da çok şık alternatifler.',alt:'Silk press ile düz ve parlak saç da çok sofistike bir tercih.'},renk:{emoji:'🎨',ad:'Siyah, Koyu Kahve veya Bakır',aciklama:'Esmer ten için doğal siyah, koyu kahve ya da cesur bakır/kızıl tonlar kırmızı elbiseyle güçlü bir uyum sağlar. Her tonu doğal taşırsınız.',swatches:[{renk:'#1a1010',ad:'Siyah'},{renk:'#3a1a10',ad:'Koyu Kahve'},{renk:'#c06030',ad:'Bakır'},{renk:'#8a2010',ad:'Kızıl'}]},ipucu:'Saç yağı ya da serum kullanarak parlaklık ekleyin — parlak saç bu lookta çok etkili.'},
+      ayakkabi:{emoji:'👠',ad:'Altın Metalik Sandalet',aciklama:'Esmer ten + kırmızı elbise için altın metalik ayakkabı en güçlü tercihtir. Sıcak metallerin bu kombinasyonla muhteşem uyumu var. Gümüş veya beyaz sandalet de ferah bir alternatif.',alt:'Gümüş metalik de çok şık görünür.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c0c0c0',ad:'Gümüş'},{renk:'#ffffff',ad:'Beyaz'}]},
+      canta:{emoji:'👜',ad:'Altın Zincirli Çanta',aciklama:'Altın zincirli siyah ya da kahve çanta esmer ten + kırmızı elbise kombinasyonunu lüks gösterir. Kırmızı çanta ise monochromatic cesur bir look için harika.',alt:'Siyah mini çanta da şık ve evrensel bir tercih.',swatches:[{renk:'#1a1a1a',ad:'Siyah'},{renk:'#c8a060',ad:'Altın'},{renk:'#c0392b',ad:'Kırmızı'}]},
+      taki:{emoji:'💍',ad:'Yoğun Altın veya Bakır Takılar',aciklama:'Esmer ten altın takıları en iyi taşıyan tendir. Büyük halka küpe, katlı altın bilezik veya bold kolye seçin. Cesur olun — bu ten her şeyi taşır.',alt:'Mercan veya turkuvaz taşlı takılar da çok güzel.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#40a0b0',ad:'Turkuvaz'}]},
+    },
+    koyu: {
+      renkAdi:'Kırmızı',
+      makyaj:{adimlar:[{num:1,baslik:'Fondöten & Yoğun Highlight',renk:'#905030',aciklama:'Koyu ten için tam örtücü, warm undertoned fondöten. Baking tekniği uygulayın: concealer üzerine pudra döküp 5-10 dakika bekleyin — çok uzun kalıcı makyaj elde edersiniz. Alın, burun, çene ve elmacık kemiklerine altın highlight vurun.',ipucu:'Altın highlight koyu tende en iyi çalışan metaldir.'},{num:2,baslik:'Derin Smoky Göz',renk:'#402020',aciklama:'Espresso ve siyah farlarla yoğun smoky göz yapın. Tüm göz kapağını karartın, iç köşeye metalik gold far ekleyin. Alt kirpik dibine de yoğun far ya da kohl kalem uygulayın. Bu look çok dramatik ama koyu ten üzerinde çarpıcı görünür.',ipucu:'Metalik gold far koyu ten üzerinde ışıl ışıl parlar.'},{num:3,baslik:'Bold Graphic Eyeliner',renk:'#1a1a1a',aciklama:'Kalın, belirgin eyeliner uygulayın. Double wing ya da graphic çizgi deneyin — koyu ten üzerinde bold eyeliner çok etkileyici ve modern görünür. Scotch tape kullanarak keskin, düz bir çizgi elde edebilirsiniz.',ipucu:'Scotch tape sınır çizgisi oluşturarak mükemmel wing yapmanıza yardımcı olur.'},{num:4,baslik:'Rich Mahogany Allık',renk:'#904030',aciklama:'Mahogany tonlu allık koyu ten üzerinde çok doğal ve derin görünür. Geniş bir fırçayla tüm elmacık kemiğine uygulayın. Highlighter ile allığın üst kısmına işık katın.',ipucu:'Bronzer ile allığı birlikte kullanın — en doğal ve sıcak görünümü verir.'},{num:5,baslik:'Dark Plum Ruj',renk:'#701818',aciklama:'Derin plum tonu dudak kalemiyle önce konturlayın — net sınırlar önemli. Ruju 3 kat uygulayın, her kat arasında dokuyla fazlayı alın. Bu look muhteşem ve kalıcı. Koyu ten üzerinde dark plum + kırmızı elbise = en güçlü kombinasyon.',ipucu:'Ruj öncesi dudak nemlendiricisi sürün — mat ruj dudakları kurutabilir.'}],stilipucu:'Koyu ten + kırmızı elbise + dark plum ruj = en güçlü kombinasyon. Altın metalik takılar, toplu saç ve yüksek topukla sahneye çıkın.'},
+      sac:{model:{emoji:'👑',ad:'Yüksek Topuz veya Braids',aciklama:'Koyu ten + kırmızı elbise için yüksek topuz ya da örgülü saç kraliçe gibi görünür. Boyun ve omuzlar açık kalır — takılarınız ve dekolteniz öne çıkar.',alt:'Silk press ile düz ve parlak saç da çok sofistike bir tercih.'},renk:{emoji:'🎨',ad:'Siyah veya Koyu Kahve',aciklama:'Koyu ten için doğal siyah ya da koyu kahve saç kırmızı elbiseyle en güçlü uyumu verir. Renkli extension da çok trend ve etkileyici.',swatches:[{renk:'#1a1010',ad:'Siyah'},{renk:'#2a1a10',ad:'Koyu Kahve'},{renk:'#8a1010',ad:'Kızıl'},{renk:'#c8a060',ad:'Bal'}]},ipucu:'Altın ya da bakır renkli saç aksesuarları bu kombinasyonda çok şık.'},
+      ayakkabi:{emoji:'👠',ad:'Metalik Altın Stiletto',aciklama:'Koyu ten + kırmızı elbise için altın metalik stiletto en güçlü tercihtir. Bakır ya da bronz da çok etkileyici.',alt:'Siyah stiletto klasik ama güvenli bir seçim.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#1a1a1a',ad:'Siyah'}]},
+      canta:{emoji:'👜',ad:'Altın veya Bakır Metalik Çanta',aciklama:'Metalik çanta koyu ten + kırmızı elbise kombinasyonunu lüks ve güçlü gösterir.',alt:'Siyah mini çanta da şık ve evrensel.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#1a1a1a',ad:'Siyah'}]},
+      taki:{emoji:'💍',ad:'Bold Altın Statement Takılar',aciklama:'Koyu ten en güçlü takıları taşıyan tendir. Büyük halka küpe, geniş bilezik, katlı kolye — hepsini bir arada bile takabilirsiniz. Statement look için git!',alt:'Elmas ya da rhinestone taşlı takılar gece için çok özel.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c0c0c0',ad:'Gümüş'},{renk:'#e8e8e8',ad:'Elmas'}]},
+    },
+  },
+  siyah: {
+    açık: {
+      renkAdi:'Siyah',
+      makyaj:{adimlar:[{num:1,baslik:'Aydınlatıcı Baz',renk:'#f5e8e0',aciklama:'Siyah elbisenin yanında ten parlak ve dinç görünmeli — soluk ten siyahın yanında kaybolur. Işıltılı primer, ardından hafif örtücü fondöten uygulayın. Göz altı concealer çok önemli — yeterince aydınlatın. Setting spray ile bitirin.',ipucu:'Siyah yanında soluk ten çok kötü görünür — parlaklık şart.'},{num:2,baslik:'Lavender Göz Farı',renk:'#c0a0c0',aciklama:'Siyah elbisenin sertliğini kırmak için soft lavender göz farı harika çalışır. Tüm kapağa açık lavender, dış köşeye biraz koyu mor ekleyin. Beyaz ya da ışıltılı şampanya far iç köşeye koyun — gözler açılır.',ipucu:'Pembe ya da mor far kırmızı damar görünümünü artırabilir — blending şart.'},{num:3,baslik:'Narin Eyeliner',renk:'#404040',aciklama:'Gri ya da kahverengi ince eyeliner çizgisi çekin — siyah çok sert olur bu lookta. İnce cat eye ucu ekleyebilirsiniz. Kahverengi maskara iki kat uygulayın.',ipucu:'Kahverengi eyeliner açık ten için çok daha yumuşak ve doğal görünür.'},{num:4,baslik:'Petal Pink Allık',renk:'#f5c0c8',aciklama:'Yumuşak pembe allık yanakların en yüksek noktasına, burun köküne doğru hafifçe blendleyin. Siyah elbisenin yanında yumuşak allık feminine ve dengeli bir görünüm sağlar.',ipucu:'Allığı gülümseyerek uygulayın — elma bölgesi o zaman en iyi görünür.'},{num:5,baslik:'Dusty Rose Ruj',renk:'#e8a0b8',aciklama:'Dusty rose ruju direkt ya da dudak kalemiyle konturlayarak uygulayın. Siyah + pastel dudak çok trend bir kombinasyon — minimal ama çok etkili. Parlak bitişli olursa daha romantik görünür.',ipucu:'Lip liner ile ruj çok daha uzun kalır ve dudaklar daha net görünür.'}],stilipucu:'Siyah elbisenin gücünü yumuşatmak için pastel makyaj harika çalışır. Beklenmedik bir kombinasyon — herkes stilinizi soracak!'},
+      sac:{model:{emoji:'🌸',ad:'Dalgalı veya Kıvırcık Saç',aciklama:'Açık ten + siyah elbise için dalgalı ya da kıvırcık saç feminenlik katar. Saçı omuzlara ya da sırtınıza serbest bırakın.',alt:'Topuz ya da at kuyruğu daha minimal bir look için ideal.'},renk:{emoji:'🎨',ad:'Sarışın veya Açık Kestane',aciklama:'Açık ten + siyah elbise için sarışın ya da açık kestane saç çok güzel kontrast oluşturur.',swatches:[{renk:'#e8d080',ad:'Sarışın'},{renk:'#c0a060',ad:'Bal'},{renk:'#8a6030',ad:'Açık Kestane'},{renk:'#f0c8a0',ad:'Platin'}]},ipucu:'Siyah elbisenin yanında açık saç çok güçlü görünür.'},
+      ayakkabi:{emoji:'👠',ad:'Nude veya Bej Topuklu',aciklama:'Açık ten + siyah elbise için nude topuklu iskarpin bacakları uzatır ve çok zarif görünür.',alt:'Gümüş sandalet gece için harika.',swatches:[{renk:'#e8c8a0',ad:'Nude'},{renk:'#c0c0c0',ad:'Gümüş'},{renk:'#ffffff',ad:'Beyaz'}]},
+      canta:{emoji:'👜',ad:'Gümüş veya Beyaz Clutch',aciklama:'Açık ten + siyah elbise için gümüş mini çanta ya da beyaz clutch çok sofistike.',alt:'Nude ya da krem zarf çanta da şık.',swatches:[{renk:'#c0c0c0',ad:'Gümüş'},{renk:'#ffffff',ad:'Beyaz'},{renk:'#e8c8a0',ad:'Krem'}]},
+      taki:{emoji:'💍',ad:'İnce Gümüş veya İnci Takılar',aciklama:'Açık ten + siyah elbise için ince gümüş takılar ya da inci detaylar çok zarif ve klasik.',alt:'Kristal ya da rhinestone taşlı takılar da harika.',swatches:[{renk:'#c0c0c0',ad:'Gümüş'},{renk:'#f0ece0',ad:'İnci'},{renk:'#e8e8e8',ad:'Kristal'}]},
+    },
+    orta:{renkAdi:'Siyah',makyaj:{adimlar:[{num:1,baslik:'Warm Fondöten',renk:'#e0c090',aciklama:'Sarı-peach alt tonlu fondöten. Siyah elbisenin yanında ten mat ve eşit görünmeli. T bölgesini pudralayın.',ipucu:'Setting spray 12 saat kalıcılık sağlar.'},{num:2,baslik:'Smoky Mauve Göz',renk:'#806080',aciklama:'Mauve ve mor tonlarla soft smoky göz. Çukura koyu, kapağa orta, iç köşeye açık ton uygulayın.',ipucu:'3 ton kullanmak gözü derinleştirir.'},{num:3,baslik:'Siyah Eyeliner',renk:'#1a1a1a',aciklama:'Siyah eyeliner kirpik diplerini doldurun, ince çizgi çekin. Dış köşeyi uzatın.',ipucu:'Eyeliner fırçasıyla daha hassas uygulama.'},{num:4,baslik:'Dusty Rose Allık',renk:'#d09090',aciklama:'Dusty rose allık elma bölgesine ve hafifçe alın kenarına.',ipucu:'Bronzer ekleyerek doğal yapın.'},{num:5,baslik:'Berry Pink Ruj',renk:'#c84070',aciklama:'Berry pink ruj, dudak kalemiyle konturlayın. Siyah + berry çok sofistike.',ipucu:'İlk çıkışta kağıt dokuyla fazlayı alın.'}],stilipucu:'Siyah elbise üzerine berry makyaj gece için ideal. Metalik aksesuarlar ekleyin.'},sac:{model:{emoji:'💫',ad:'French Twist veya Şık Topuz',aciklama:'Orta ten + siyah elbise için french twist çok zarif görünür.',alt:'Dalgalı yarım açık saç daha romantik.'},renk:{emoji:'🎨',ad:'Koyu Kestane veya Siyah',aciklama:'Orta ten + siyah elbise için koyu kestane veya siyah saç çok güçlü.',swatches:[{renk:'#5a2010',ad:'Koyu Kestane'},{renk:'#1a1010',ad:'Siyah'},{renk:'#c06030',ad:'Bakır'}]},ipucu:'Saça serum sürün — parlak saç bu lookla çok etkili.'},ayakkabi:{emoji:'👠',ad:'Siyah Stiletto veya Metalik',aciklama:'Orta ten + siyah elbise için siyah stiletto klasik, metalik altın veya gümüş ise daha cesur.',alt:'Nude iskarpin daha feminine bir look.',swatches:[{renk:'#1a1a1a',ad:'Siyah'},{renk:'#c8a060',ad:'Altın'},{renk:'#c0c0c0',ad:'Gümüş'}]},canta:{emoji:'👜',ad:'Altın Zincirli Mini Çanta',aciklama:'Altın zincirli siyah mini çanta orta ten + siyah elbiseyle mükemmel.',alt:'Koyu bordo ya da lacivert çanta da şık.',swatches:[{renk:'#1a1a1a',ad:'Siyah'},{renk:'#c8a060',ad:'Altın'},{renk:'#7b1c2e',ad:'Bordo'}]},taki:{emoji:'💍',ad:'Altın veya Gümüş Statement Takılar',aciklama:'Orta ten + siyah elbise için büyük hoop küpe veya layered kolye çok sofistike.',alt:'Saat ve bilezik kombinasyonu minimal ama şık.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c0c0c0',ad:'Gümüş'}]}},
+    esmer:{renkAdi:'Siyah',makyaj:{adimlar:[{num:1,baslik:'Tam Örtücü Fondöten',renk:'#b08050',aciklama:'Warm undertoned fondöten. Highlighter karıştırabilirsiniz.',ipucu:'Alın ve elmacık kemiklerine highlight.'},{num:2,baslik:'Deep Plum Göz',renk:'#804060',aciklama:'Plum ve koyu mor farlarla dramatik göz. Kapağa metalik ton.',ipucu:'Metalik far esmer tende en çok parlar.'},{num:3,baslik:'Bold Eyeliner',renk:'#1a1010',aciklama:'Kalın, belirgin eyeliner. Takma kirpik ekleyin.',ipucu:'Takma kirpik ortadan başlayın.'},{num:4,baslik:'Warm Brick Allık',renk:'#c07060',aciklama:'Brick allık esmer tende terra cotta gibi. Yanakların tamamına ve şakaklara.',ipucu:'Bronzer + allık = en doğal görünüm.'},{num:5,baslik:'Hot Pink Ruj',renk:'#d04060',aciklama:'Siyah elbise üzerinde hot pink — cesur ama esmer tende mükemmel!',ipucu:'Blue-toned pembe dişleri beyaz gösterir.'}],stilipucu:'Siyah + esmer ten + hot pink — en güçlü kombinasyonlardan biri.'},sac:{model:{emoji:'🌺',ad:'Volümlü Dalgalar',aciklama:'Esmer ten + siyah elbise için volümlü dalgalar çarpıcı kontrast yaratır.',alt:'Sleek düz veya yüksek ponytail daha modern.'},renk:{emoji:'🎨',ad:'Siyah veya Bakır',aciklama:'Esmer ten + siyah elbise için siyah ya da bakır saç güçlü.',swatches:[{renk:'#1a1010',ad:'Siyah'},{renk:'#c06030',ad:'Bakır'},{renk:'#8a2010',ad:'Kızıl'}]},ipucu:'Saç yağı ile parlak saç bu lookta çok etkili.'},ayakkabi:{emoji:'👠',ad:'Altın Metalik veya Kırmızı',aciklama:'Esmer ten + siyah elbise için altın sandalet veya kırmızı stiletto çarpıcı.',alt:'Siyah platformlu topuk daha dramatik.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c0392b',ad:'Kırmızı'},{renk:'#1a1a1a',ad:'Siyah'}]},canta:{emoji:'👜',ad:'Kırmızı veya Altın Çanta',aciklama:'Siyah + esmer ten için pop of color — kırmızı ya da altın çanta.',alt:'Siyah çanta sade ama şık alternatif.',swatches:[{renk:'#c0392b',ad:'Kırmızı'},{renk:'#c8a060',ad:'Altın'},{renk:'#1a1a1a',ad:'Siyah'}]},taki:{emoji:'💍',ad:'Bold Altın Takılar',aciklama:'Esmer ten altın takıları en iyi taşıyan tendir. Büyük hoop küpe, katlı kolye, yığma bilezik.',alt:'Mercan ya da amber taşlı takılar da çok güzel.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#d04020',ad:'Mercan'}]}},
+    koyu:{renkAdi:'Siyah',makyaj:{adimlar:[{num:1,baslik:'Highlighter Öncelik',renk:'#905030',aciklama:'Tam örtücü fondöten sonra yoğun highlight. Baking tekniğiyle kalıcı.',ipucu:'Altın highlight koyu tende en iyi çalışır.'},{num:2,baslik:'Midnight Purple Göz',renk:'#604870',aciklama:'Derin midnight purple ile smoky göz. Metalik mor kapağa, siyah çukura. Gold iç köşe.',ipucu:'Parlak far üstüne mat far blendleyin.'},{num:3,baslik:'Graphic Eyeliner',renk:'#1a1a1a',aciklama:'Graphic liner veya double wing.',ipucu:'Scotch tape ile keskin çizgi.'},{num:4,baslik:'Deep Plum Allık',renk:'#804040',aciklama:'Plum allık koyu tende çok doğal. Geniş fırçayla tüm elmacık kemiğine.',ipucu:'Allık ile bronzeri kullanın.'},{num:5,baslik:'Coral Red Ruj',renk:'#e06080',aciklama:'Coral red koyu tende inanılmaz parlar. Dudak kalemiyle konturlayın.',ipucu:'Blue-toned coral dişleri beyaz gösterir.'}],stilipucu:'Koyu ten siyah elbisenin en güçlü sahibi. Metalik detaylar, altın takılar, yüksek topuklar.'},sac:{model:{emoji:'👑',ad:'Yüksek Topuz veya Braids',aciklama:'Koyu ten + siyah elbise için yüksek topuz veya braids kraliçe gibi görünür.',alt:'Silk press ile düz parlak saç da sofistike.'},renk:{emoji:'🎨',ad:'Siyah veya Koyu Kahve',aciklama:'Koyu ten + siyah elbise için siyah saç güçlü.',swatches:[{renk:'#1a1010',ad:'Siyah'},{renk:'#2a1a10',ad:'Koyu Kahve'}]},ipucu:'Altın ya da bakır toka saçı tamamlar.'},ayakkabi:{emoji:'👠',ad:'Metalik Stiletto',aciklama:'Koyu ten + siyah elbise için altın ya da bakır metalik stiletto en güçlü tercih.',alt:'Siyah stiletto klasik ama güvenli.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#1a1a1a',ad:'Siyah'}]},canta:{emoji:'👜',ad:'Metalik Altın veya Bakır Çanta',aciklama:'Metalik çanta koyu ten + siyah kombinasyonu lüks gösterir.',alt:'Siyah mini çanta sade ve şık.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c07030',ad:'Bakır'},{renk:'#1a1a1a',ad:'Siyah'}]},taki:{emoji:'💍',ad:'Statement Altın Takılar',aciklama:'Koyu ten en güçlü takıları taşır. Büyük küpe, geniş bilezik, katlı kolye hepsi bir arada.',alt:'Elmas ya da rhinestone gece için harika.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#e8e8e8',ad:'Elmas'},{renk:'#c0c0c0',ad:'Gümüş'}]}},
+  },
+};
+
+// Fallback
+const FALLBACK = {
+  renkAdi:'',
+  makyaj:{adimlar:[{num:1,baslik:'Fondöten',renk:'#e8c8a0',aciklama:'Ten renginize uygun fondöteni yüzünüze eşit şekilde uygulayın. Parmak uçlarıyla ya da süngerle blendleyin.',ipucu:'İnce kat şeffaf ve doğal görünüm sağlar.'},{num:2,baslik:'Göz Farı',renk:'#b09090',aciklama:'Warm brown farı kapağa, koyu tonu çukura uygulayın. Blending fırçasıyla iyice karıştırın.',ipucu:'Blending fırçası şart — sert sınırlar amatörce görünür.'},{num:3,baslik:'Eyeliner & Maskara',renk:'#2a1a1a',aciklama:'İnce eyeliner kirpik diplerine ve iki kat maskara uygulayın.',ipucu:'Kirpik kıvırıcı kullandıktan sonra maskara süreyin.'},{num:4,baslik:'Allık',renk:'#d0a0a0',aciklama:'Yanakların elma bölgesine soft rose allık uygulayın. Fan fırçayla az miktarda, şakaklara doğru blendleyin.',ipucu:'Az uygulayın, gerekirse artırın.'},{num:5,baslik:'Ruj',renk:'#c08090',aciklama:'Nude mauve ruj her tene ve her renge yakışır. Dudak kalemiyle önce konturlayın.',ipucu:'Lip liner rujtaşmasını önler.'}],stilipucu:'Nude ve warm-toned makyaj her elbise rengiyle güvenli ve şık bir seçimdir.'},
+  sac:{model:{emoji:'💇‍♀️',ad:'Rengine Uygun Saç Stili',aciklama:'Ten ve elbise rengine uygun saç stili seçin. Dalgalı ya da topuz her zaman iyi alternatif.',alt:'Serbest veya toplu — ikisi de şık.'},renk:{emoji:'🎨',ad:'Doğal Tonunuz',aciklama:'Doğal saç renginiz ya da tercihlerinize göre seçim yapın. Her ton bu elbiseyle uyumlu.',swatches:[{renk:'#1a1010',ad:'Siyah'},{renk:'#8a5028',ad:'Kestane'},{renk:'#e8d080',ad:'Sarışın'},{renk:'#c06030',ad:'Bakır'}]},ipucu:'Saçı parlak ve bakımlı tutun — parlaklık her looku güçlendirir.'},
+  ayakkabi:{emoji:'👠',ad:'Nude Topuklu',aciklama:'Nude topuklu iskarpin her renkle uyumlu ve şıktır.',alt:'Siyah topuklu klasik alternatif.',swatches:[{renk:'#e8c8a0',ad:'Nude'},{renk:'#1a1a1a',ad:'Siyah'}]},
+  canta:{emoji:'👜',ad:'Siyah veya Nude Çanta',aciklama:'Siyah ya da nude çanta her kombinasyonla uyumludur.',alt:'Altın metalik evrensel seçim.',swatches:[{renk:'#1a1a1a',ad:'Siyah'},{renk:'#e8c8a0',ad:'Nude'},{renk:'#c8a060',ad:'Altın'}]},
+  taki:{emoji:'💍',ad:'Altın veya Gümüş Takılar',aciklama:'Altın ya da gümüş takılar her renk elbiseyle uyumludur.',alt:'İnci her tene yakışır.',swatches:[{renk:'#c8a060',ad:'Altın'},{renk:'#c0c0c0',ad:'Gümüş'},{renk:'#f0ece0',ad:'İnci'}]},
+};
+
+function renderSwatches(swatches){
+  if(!swatches) return '';
+  return '<div class="renk-chips">'+swatches.map(s=>`<div class="renk-chip"><div class="renk-nokta" style="background:${s.renk}"></div>${s.ad}</div>`).join('')+'</div>';
+}
+
+function gosterSonuc(){
+  const r = RENKLER.find(x=>x.id===secilenRenk);
+  const stil = (STIL[secilenRenk] && STIL[secilenRenk][secilenTen]) || FALLBACK;
+  const renkAdi = r.ad;
+  const tenAdi = {açık:'Açık Ten',orta:'Orta Ten',esmer:'Esmer Ten',koyu:'Koyu Ten'}[secilenTen];
+
+  // Result header
+  document.getElementById('resultDressPreview').innerHTML = dressSVG(r.hex, r.tip);
+  document.getElementById('resultTitle').textContent = renkAdi + ' Elbise';
+  document.getElementById('resultSub').textContent = tenAdi + ' · Kişisel stil rehberin';
+
+  // MAKYAJ
+  const mkj = stil.makyaj;
+  document.getElementById('tab-makyaj').innerHTML =
+    mkj.adimlar.map((a,i)=>`<div class="makyaj-adim" style="animation-delay:${i*0.08}s">
+      <div class="adim-header">
+        <div class="adim-renk" style="background:${a.renk}"></div>
+        <div class="adim-baslik">${a.baslik}</div>
+        <div class="adim-num">${a.num}</div>
+      </div>
+      <div class="adim-aciklama">${a.aciklama}</div>
+      <div class="adim-ipucu">✦ ${a.ipucu}</div>
+    </div>`).join('') +
+    `<div class="stilist-notu"><div class="stilist-notu-label">✦ Stilist Notu</div><div class="stilist-notu-text">${mkj.stilipucu}</div></div>`;
+
+  // SAÇ
+  const sac = stil.sac;
+  document.getElementById('tab-sac').innerHTML = `
+    <div class="sac-kart">
+      <div class="sac-kart-baslik">Önerilen Model</div>
+      <div class="sac-kart-ad">${sac.model.emoji} ${sac.model.ad}</div>
+      <div class="sac-kart-aciklama">${sac.model.aciklama}</div>
+      <div class="sac-kart-alt">${sac.model.alt}</div>
+    </div>
+    <div class="sac-kart" style="border-left-color:#7c4ca0">
+      <div class="sac-kart-baslik" style="color:#7c4ca0">Saç Rengi</div>
+      <div class="sac-kart-ad">${sac.renk.emoji} ${sac.renk.ad}</div>
+      <div class="sac-kart-aciklama">${sac.renk.aciklama}</div>
+      ${renderSwatches(sac.renk.swatches)}
+    </div>
+    <div class="stilist-notu"><div class="stilist-notu-label">✦ Saç İpucu</div><div class="stilist-notu-text">${sac.ipucu}</div></div>`;
+
+  // AKSESUARlar
+  ['ayakkabi','canta','taki'].forEach(key => {
+    const a = stil[key];
+    document.getElementById('tab-'+key).innerHTML = `
+      <div class="aksesuar-kart">
+        <div class="aksesuar-icon">${a.emoji}</div>
+        <div class="aksesuar-baslik">En İyi Seçim</div>
+        <div class="aksesuar-ad">${a.ad}</div>
+        <div class="aksesuar-aciklama">${a.aciklama}</div>
+        ${renderSwatches(a.swatches)}
+        <div class="aksesuar-alt">Alternatif: ${a.alt}</div>
+      </div>
+      <div class="stilist-notu"><div class="stilist-notu-label">✦ İpucu</div><div class="stilist-notu-text">${a.alt}</div></div>`;
+  });
+
+  const card = document.getElementById('resultCard');
+  card.classList.add('show');
+  // Reset tabs
+  document.querySelectorAll('.rtab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-content').forEach((c,i)=>c.classList.toggle('active',i===0));
+  setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function hizliSec(renkId, tenId){
+  const kartlar = document.querySelectorAll('.elbise-kart');
+  kartlar.forEach((k,i)=>{ if(RENKLER[i].id===renkId){ k.classList.add('selected'); secilenRenk=renkId; } else k.classList.remove('selected'); });
+  const tenMap={açık:0,orta:1,esmer:2,koyu:3};
+  document.querySelectorAll('.ten-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.ten-btn')[tenMap[tenId]].classList.add('selected');
+  secilenTen=tenId;
+  checkReady();
+  setTimeout(gosterSonuc,150);
+  document.querySelector('.step-section').scrollIntoView({behavior:'smooth'});
+}
+
+// Dil
+const TR={heroEyebrow:'Renk · Uyum · Güzellik · Stil',heroTitle:'Rengine göre<br><em>komple stil rehberin</em>',heroSub:'Elbisenin rengini seç — makyaj, saç, ayakkabı, çanta ve takıya kadar her şeyi öğren.',s1:'Adım 1 / 2',t1:'Elbise rengini seç',s2:'Adım 2 / 2',t2:'Ten rengin hangisine yakın?',cta:'Stilimi Oluştur ✨',tenler:['Açık Ten','Orta Ten','Esmer Ten','Koyu Ten'],tenDesc:['Pembe veya sarı alt ton','Zeytin veya buğday tonu','Koyu bronz veya kahve','Derin kahve tonu'],tabs:['Makyaj','Saç','Ayakkabı','Çanta','Takı'],trend:'Hızlı Kombinler',footer:'© 2025 VIVASTIL — Trendleri takip et, stilini keşfet 💕'};
+const EN={heroEyebrow:'Color · Harmony · Beauty · Style',heroTitle:'Complete style<br><em>for your color</em>',heroSub:'Pick your dress color — get your guide for makeup, hair, shoes, bag and jewelry.',s1:'Step 1 / 2',t1:'Select your dress color',s2:'Step 2 / 2',t2:'Which skin tone is yours?',cta:'Create My Style ✨',tenler:['Fair Skin','Medium Skin','Tan Skin','Deep Skin'],tenDesc:['Pink or yellow undertone','Olive or wheat tone','Dark bronze or brown','Deep brown tone'],tabs:['Makeup','Hair','Shoes','Bag','Jewelry'],trend:'Quick Combos',footer:'© 2025 VIVASTIL — Follow trends, discover your style 💕'};
+
+function setLang(lang, btn){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const t = lang==='tr'?TR:EN;
+  document.querySelector('.hero-eyebrow').textContent=t.heroEyebrow;
+  document.querySelector('.hero-title').innerHTML=t.heroTitle;
+  document.querySelector('.hero-sub').textContent=t.heroSub;
+  const stepLabels=document.querySelectorAll('.step-label');
+  stepLabels[0].textContent=t.s1; stepLabels[1].textContent=t.s2;
+  const stepTitles=document.querySelectorAll('.step-title');
+  stepTitles[0].textContent=t.t1; stepTitles[1].textContent=t.t2;
+  document.getElementById('ctaBtn').textContent=t.cta;
+  const tenBtns=document.querySelectorAll('.ten-btn');
+  tenBtns.forEach((b,i)=>{b.querySelector('.ten-name').textContent=t.tenler[i];b.querySelector('.ten-desc').textContent=t.tenDesc[i];});
+  const tabBtns=document.querySelectorAll('.rtab');
+  const tabIcons=['💄','💇‍♀️','👠','👜','💍'];
+  tabBtns.forEach((b,i)=>{b.innerHTML=`<span class="tab-icon">${tabIcons[i]}</span>${t.tabs[i]}`;});
+  document.querySelector('.trend-baslik').textContent=t.trend;
+  document.querySelector('footer').textContent=t.footer;
+}
+</script>
+</body>
+</html>
